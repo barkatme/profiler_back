@@ -15,7 +15,7 @@ enum class Routes(
 
     //user
     USER("user", requireAuth = true),
-    UPDATE_USER("user", requireAuth = true, method = HttpMethod.Put),
+    UPDATE_USER("user", requireAuth = true, method = HttpMethod.Post),
     USER_BY_ID("user/{${Param.USER_ID}}"),
 
     //roles
