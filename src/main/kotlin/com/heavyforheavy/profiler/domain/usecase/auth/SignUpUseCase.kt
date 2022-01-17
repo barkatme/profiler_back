@@ -9,13 +9,14 @@ import org.jetbrains.exposed.exceptions.ExposedSQLException
 
 class SignUpUseCase(private val userRepository: UserRepository) {
 
-    suspend fun signUp(user: User, tokenGenerator: (User) -> String): User = withContext(Dispatchers.IO) {
-        user.token = tokenGenerator(user)
-        try {
-            userRepository.insert(user)
-        } catch (e: ExposedSQLException) {
-            throw AuthException.EmailAlreadyExists()
-        }
-        return@withContext user
+  suspend fun signUp(user: User, tokenGenerator: (User) -> String): User =
+    withContext(Dispatchers.IO) {
+      user.token = tokenGenerator(user)
+      try {
+        userRepository.insert(user)
+      } catch (e: ExposedSQLException) {
+        throw AuthException.EmailAlreadyExists()
+      }
+      return@withContext user
     }
 }

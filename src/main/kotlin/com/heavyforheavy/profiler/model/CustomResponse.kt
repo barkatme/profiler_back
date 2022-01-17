@@ -13,20 +13,18 @@ import kotlinx.serialization.modules.SerializersModuleBuilder
 @Serializable
 data class CustomResponse(
 //    @Polymorphic
-    @SerialName("data") val data: JsonElement? = null,
-    @Polymorphic
-    @SerialName("error") val error: ApiException? = null,
+  @SerialName("data") val data: JsonElement? = null,
+  @Polymorphic
+  @SerialName("error") val error: ApiException? = null,
 )
 
-fun CustomResponse.asString(pretty: Boolean = false) = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = true
-    prettyPrint = pretty
-    serializersModule = SerializersModule {
-        dataPolymorphic()
-        errorPolymorphic()
-    }
-}.encodeToString(CustomResponse.serializer(), this)
+fun CustomResponse.asString(pretty: Boolean = false): String {
+  return if (pretty) {
+    prettyJson
+  } else {
+    notPrettyJson
+  }.encodeToString(CustomResponse.serializer(), this)
+}
 
 fun SerializersModuleBuilder.dataPolymorphic() {
 //    polymorphic(JsonElement::class) {
@@ -34,4 +32,29 @@ fun SerializersModuleBuilder.dataPolymorphic() {
 //        polymorphic(ServiceInfo::class, ServiceInfo.serializer())
 //        polymorphic(UserService::class, UserService.serializer())
 //    }
+}
+
+val customSerializersModule = SerializersModule {
+  dataPolymorphic()
+  errorPolymorphic()
+}
+
+fun getJson(pretty: Boolean = false): Json = if (pretty) {
+  prettyJson
+} else {
+  notPrettyJson
+}
+
+private val prettyJson = Json {
+  ignoreUnknownKeys = true
+  encodeDefaults = true
+  prettyPrint = true
+  serializersModule = customSerializersModule
+}
+
+private val notPrettyJson = Json {
+  ignoreUnknownKeys = true
+  encodeDefaults = true
+  prettyPrint = false
+  serializersModule = customSerializersModule
 }

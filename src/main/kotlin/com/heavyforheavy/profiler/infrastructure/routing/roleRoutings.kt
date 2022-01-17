@@ -17,19 +17,19 @@ import org.koin.ktor.ext.get
 
 fun Routing.roleRouting() {
 
-    val getUserRolePermissionsUseCase: GetUserRolePermissionsUseCase = get()
-    val getRolePermissionsUseCase: GetRolePermissionsUseCase = get()
+  val getUserRolePermissionsUseCase: GetUserRolePermissionsUseCase = get()
+  val getRolePermissionsUseCase: GetRolePermissionsUseCase = get()
 
-    route(Routes.ROLE_PERMISSIONS) {
-        call.respond(
-            call.getUserIdPrincipal()?.name?.let { email ->
-                getUserRolePermissionsUseCase.getUserPermissions(email).response()
-            } ?: throw AuthException.InvalidToken()
-        )
-    }
+  route(Routes.ROLE_PERMISSIONS) {
+    call.respond(
+      call.getUserIdPrincipal()?.name?.let { email ->
+        getUserRolePermissionsUseCase.getUserPermissions(email).response()
+      } ?: throw AuthException.InvalidToken()
+    )
+  }
 
-    route(Routes.ROLE_PERMISSIONS_BY_ID) {
-        val roleId = call.requireParameter(Param.ROLE_ID).toInt()
-        call.respond(getRolePermissionsUseCase.getUserPermissions(roleId).response())
-    }
+  route(Routes.ROLE_PERMISSIONS_BY_ID) {
+    val roleId = call.requireParameter(Param.ROLE_ID).toInt()
+    call.respond(getRolePermissionsUseCase.getUserPermissions(roleId).response())
+  }
 }

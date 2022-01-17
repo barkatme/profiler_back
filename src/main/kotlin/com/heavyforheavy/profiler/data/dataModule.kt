@@ -6,12 +6,12 @@ import org.koin.dsl.module
 
 val dataModule = module {
 
-    //heroku repositories
-    single<ServiceInfoRepository> { HerokuServiceInfoRepository() }
-    single<UserRelationRepository> { HerokuUserRelationRepository() }
-    single<UserRepository>{ HerokuUserRepository() }
-    single<UserServiceRepository>{ HerokuUserServiceRepository() }
-    single<RoleRepository>{ HerokuUserRoleRepository() }
-    single<PermissionRepository>{ HerokuPermissionRepository() }
+  //heroku repositories
+  single<ServiceInfoRepository> { HerokuServiceInfoRepository() }
+  single<UserRelationRepository> { HerokuUserRelationRepository() }
+  single<UserRepository> { HerokuUserRepository() }
+  single<UserServiceRepository> { HerokuUserServiceRepository() }
+  single<RoleRepository> { HerokuUserRoleRepository() }
+  single<PermissionRepository> { HerokuPermissionRepository() }
 
 }

@@ -9,6 +9,7 @@ import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincip
 import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
 import com.heavyforheavy.profiler.infrastructure.routing.routes.route
 import com.heavyforheavy.profiler.mappers.response
+import com.heavyforheavy.profiler.model.response
 import com.heavyforheavy.profiler.routes.Param
 import com.heavyforheavy.profiler.routes.Routes
 import io.ktor.application.*
@@ -56,6 +57,12 @@ fun Routing.viewedUsersRouting() {
     route(Routes.DELETE_VIEWERS_BY_ID) {
         val userId = call.requireParameter(Param.USER_ID).toInt()
         val viewerId = call.requireParameter(Param.VIEWER_ID).toInt()
-        call.respond(deleteViewersByIdUseCase.deleteViewers(userId, viewerId, call.getUserIdPrincipal()?.name))
+        call.respond(
+            deleteViewersByIdUseCase.deleteViewers(
+                userId,
+                viewerId,
+                call.getUserIdPrincipal()?.name
+            ).response()
+        )
     }
 }

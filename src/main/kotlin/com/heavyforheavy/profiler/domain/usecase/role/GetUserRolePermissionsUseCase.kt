@@ -8,11 +8,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetUserRolePermissionsUseCase(
-    private val userRepository: UserRepository,
-    private val roleRepository: RoleRepository
+  private val userRepository: UserRepository,
+  private val roleRepository: RoleRepository
 ) {
-    suspend fun getUserPermissions(userEmail: String): List<Permission> = withContext(Dispatchers.IO) {
-        val role = userRepository.getByEmail(userEmail)?.role ?: throw AuthException.InvalidEmail()
-        roleRepository.getPermissions(role)
+  suspend fun getUserPermissions(userEmail: String): List<Permission> =
+    withContext(Dispatchers.IO) {
+      val role = userRepository.getByEmail(userEmail)?.role ?: throw AuthException.InvalidEmail()
+      roleRepository.getPermissions(role)
     }
 }

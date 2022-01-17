@@ -37,7 +37,7 @@ private fun Application.allRouting() {
     //Auth routings are located at authModule
     routing {
         homeRouting()
-        
+
         usersRouting()
         viewedUsersRouting()
         saveUserRoting()

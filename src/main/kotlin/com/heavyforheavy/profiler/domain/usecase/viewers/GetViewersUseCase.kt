@@ -7,16 +7,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetViewersUseCase(
-    private val userRelationRepository: UserRelationRepository,
-    private val userRepository: UserRepository
+  private val userRelationRepository: UserRelationRepository,
+  private val userRepository: UserRepository
 ) {
-    suspend fun getViewedUsers(
-        email: String?,
-        search: String? = null,
-        offset: Int? = null,
-        limit: Int? = null
-    ) = withContext(Dispatchers.IO) {
-        val currentUser = email?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
-        userRelationRepository.getViewers(currentUser.id, search, offset, limit)
-    }
+  suspend fun getViewedUsers(
+    email: String?,
+    search: String? = null,
+    offset: Int? = null,
+    limit: Int? = null
+  ): List<UserRelationRepository.ViewerResult> = withContext(Dispatchers.IO) {
+    val currentUser = email?.let { userRepository.getByEmail(it) }
+      ?: throw AuthException.InvalidToken()
+    userRelationRepository.getViewers(currentUser.id, search, offset, limit)
+  }
 }

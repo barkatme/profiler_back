@@ -9,16 +9,17 @@ import kotlinx.serialization.json.Json
 
 @Serializable
 data class UserService(
-    @SerialName("id") val id: Int,
-    @SerialName("serviceInfo") val serviceInfo: ServiceInfo = ServiceInfo(0, "", "", ""),
-    @SerialName("userId") val userId: Int,
-    @SerialName("userLink") val userLink: String,
+  @SerialName("id") val id: Int,
+  @SerialName("serviceInfo") val serviceInfo: ServiceInfo = ServiceInfo(0, "", "", ""),
+  @SerialName("userId") val userId: Int? = null,
+  @SerialName("userLink") val userLink: String? = null,
 )
 
-fun UserService.asString(pretty: Boolean = false) = Json.instance(pretty).encodeToString(UserService.serializer(), this)
+fun UserService.asString(pretty: Boolean = false) =
+  Json.instance(pretty).encodeToString(UserService.serializer(), this)
 
 fun UserService.asJson(pretty: Boolean = false) =
-    Json.instance(pretty).encodeToJsonElement(UserService.serializer(), this)
+  Json.instance(pretty).encodeToJsonElement(UserService.serializer(), this)
 
 fun List<UserService>.asJson(pretty: Boolean = false) =
-    Json.instance(pretty).encodeToJsonElement(ListSerializer(UserService.serializer()), this)
+  Json.instance(pretty).encodeToJsonElement(ListSerializer(UserService.serializer()), this)

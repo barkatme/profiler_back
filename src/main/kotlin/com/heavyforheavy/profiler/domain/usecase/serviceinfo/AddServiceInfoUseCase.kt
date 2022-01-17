@@ -12,19 +12,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class AddServiceInfoUseCase(
-    private val serviceInfoRepository: ServiceInfoRepository,
-    private val userRepository: UserRepository,
-    private val roleRepository: RoleRepository,
-    private val permissionRepository: PermissionRepository
+  private val serviceInfoRepository: ServiceInfoRepository,
+  private val userRepository: UserRepository,
+  private val roleRepository: RoleRepository,
+  private val permissionRepository: PermissionRepository
 ) {
-    suspend fun addServiceInfo(creatorEmail: String, serviceInfo: ServiceInfo): Int = withContext(Dispatchers.IO) {
-        val requiredPermissions = permissionRepository.getUrlPermissions(Routes.ADD_SERVICE_INFO.url)
-        val user = userRepository.getByEmail(creatorEmail) ?: throw AuthException.InvalidEmail()
-        val userPermissions = roleRepository.getPermissions(user.role)
-        if (userPermissions.containsAll(requiredPermissions)) {
-            serviceInfoRepository.insert(serviceInfo)
-        } else {
-            throw RequestException.PermissionDenied()
-        }
+  suspend fun addServiceInfo(creatorEmail: String, serviceInfo: ServiceInfo): ServiceInfo =
+    withContext(Dispatchers.IO) {
+      val requiredPermissions = permissionRepository.getUrlPermissions(Routes.ADD_SERVICE_INFO.url)
+      val user = userRepository.getByEmail(creatorEmail) ?: throw AuthException.InvalidEmail()
+      val userPermissions = roleRepository.getPermissions(user.role)
+      if (userPermissions.containsAll(requiredPermissions)) {
+        serviceInfoRepository.insert(serviceInfo)
+      } else {
+        throw RequestException.PermissionDenied()
+      }
     }
 }

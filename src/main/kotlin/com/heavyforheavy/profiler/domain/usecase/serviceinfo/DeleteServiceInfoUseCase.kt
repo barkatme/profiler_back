@@ -12,19 +12,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DeleteServiceInfoUseCase(
-    private val serviceInfoRepository: ServiceInfoRepository,
-    private val userRepository: UserRepository,
-    private val roleRepository: RoleRepository,
-    private val permissionRepository: PermissionRepository
+  private val serviceInfoRepository: ServiceInfoRepository,
+  private val userRepository: UserRepository,
+  private val roleRepository: RoleRepository,
+  private val permissionRepository: PermissionRepository
 ) {
-    suspend fun deleteServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Int = withContext(Dispatchers.IO) {
-        val requiredPermissions = permissionRepository.getUrlPermissions(Routes.DELETE_SERVICE_INFO.url)
-        val user = userRepository.getByEmail(updaterEmail) ?: throw AuthException.InvalidEmail()
-        val userPermissions = roleRepository.getPermissions(user.role)
-        if (userPermissions.containsAll(requiredPermissions)) {
-            serviceInfoRepository.delete(serviceInfo)
-        } else {
-            throw RequestException.PermissionDenied()
-        }
+  suspend fun deleteServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Boolean =
+    withContext(Dispatchers.IO) {
+      val requiredPermissions =
+        permissionRepository.getUrlPermissions(Routes.DELETE_SERVICE_INFO.url)
+      val user = userRepository.getByEmail(updaterEmail) ?: throw AuthException.InvalidEmail()
+      val userPermissions = roleRepository.getPermissions(user.role)
+      if (userPermissions.containsAll(requiredPermissions)) {
+        serviceInfoRepository.delete(serviceInfo) != 0
+      } else {
+        throw RequestException.PermissionDenied()
+      }
     }
 }

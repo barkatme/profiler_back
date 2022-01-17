@@ -11,25 +11,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetViewersByIdUseCase(
-    private val userRelationRepository: UserRelationRepository,
-    private val userRepository: UserRepository,
-    private val permissionRepository: PermissionRepository,
-    private val roleRepository: RoleRepository
+  private val userRelationRepository: UserRelationRepository,
+  private val userRepository: UserRepository,
+  private val permissionRepository: PermissionRepository,
+  private val roleRepository: RoleRepository
 ) {
-    suspend fun getViewers(
-        id: Int,
-        requesterEmail: String?,
-        search: String? = null,
-        offset: Int? = null,
-        limit: Int? = null
-    ) = withContext(Dispatchers.IO) {
-        val currentUser = requesterEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
-        val permissions = permissionRepository.getUrlPermissions(Routes.VIEWERS_BY_ID.url)
-        val rolePermissions = roleRepository.getPermissions(currentUser.role)
-        if (rolePermissions.containsAll(permissions)) {
-            userRelationRepository.getViewers(id, search, offset, limit)
-        } else {
-            throw RequestException.PermissionDenied()
-        }
+  suspend fun getViewers(
+    id: Int,
+    requesterEmail: String?,
+    search: String? = null,
+    offset: Int? = null,
+    limit: Int? = null
+  ): List<UserRelationRepository.ViewerResult> = withContext(Dispatchers.IO) {
+    val currentUser =
+      requesterEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
+    val permissions = permissionRepository.getUrlPermissions(Routes.VIEWERS_BY_ID.url)
+    val rolePermissions = roleRepository.getPermissions(currentUser.role)
+    if (rolePermissions.containsAll(permissions)) {
+      userRelationRepository.getViewers(id, search, offset, limit)
+    } else {
+      throw RequestException.PermissionDenied()
     }
+  }
 }

@@ -7,6 +7,8 @@ import com.heavyforheavy.profiler.domain.usecase.userservices.GetUserAndServices
 import com.heavyforheavy.profiler.domain.usecase.userservices.asJson
 import com.heavyforheavy.profiler.model.*
 
+
+fun OperationResult.response() = CustomResponse(this.asJson())
 fun User.response() = CustomResponse(this.asJson())
 fun UserService.response() = CustomResponse(this.asJson())
 fun GetUserAndServicesUseCase.UserAndServices.response() = CustomResponse(this.asJson())

@@ -5,7 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetUserByTokenUseCase(private val userRepository: UserRepository) {
-    suspend fun getUser(token: String) = withContext(Dispatchers.IO) {
-        userRepository.getByToken(token)
-    }
+  suspend fun getUser(token: String) = withContext(Dispatchers.IO) {
+    userRepository.getByToken(token)
+  }
 }
