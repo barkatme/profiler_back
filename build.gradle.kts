@@ -11,6 +11,7 @@ application { mainClass.set("com.heavyforheavy.profiler.ApplicationKt") }
 
 repositories {
     mavenCentral()
+    @Suppress("DEPRECATION")
     jcenter()
     maven("https://kotlin.bintray.com/kotlin-js-wrappers/")
 }
@@ -61,6 +62,6 @@ flyway {
 }
 
 // Alias "installDist" as "stage" (for cloud providers)
-//tasks.create("stage") {
-//    dependsOn(tasks.getByName("installDist"))
-//}
+tasks.create("stage") {
+    dependsOn(tasks.getByName("installDist"))
+}
