@@ -1,0 +1,1 @@
+web: build/install/profiler/bin/profiler
