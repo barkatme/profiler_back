@@ -41,7 +41,8 @@ dependencies {
 
     //databaseDependencies
     implementation("org.jetbrains.exposed:exposed:0.17.14")
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    @Suppress("GradlePackageUpdate")
+    implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("org.postgresql:postgresql:42.3.1")
     implementation("org.flywaydb:flyway-core:8.4.1")
 
