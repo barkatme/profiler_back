@@ -8,6 +8,7 @@ import com.heavyforheavy.profiler.mappers.response
 import com.heavyforheavy.profiler.model.ServiceInfo
 import com.heavyforheavy.profiler.model.exception.AuthException
 import com.heavyforheavy.profiler.model.exception.ServiceInfoException
+import com.heavyforheavy.profiler.model.response
 import com.heavyforheavy.profiler.routes.Param
 import com.heavyforheavy.profiler.routes.Routes
 import io.ktor.application.*
@@ -40,28 +41,28 @@ fun Routing.serviceInfoRouting() {
   route(Routes.ADD_SERVICE_INFO) {
     val serviceInfo = call.receive<ServiceInfo>()
     call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(addServiceInfoUseCase.addServiceInfo(email, serviceInfo))
+      call.respond(addServiceInfoUseCase.addServiceInfo(email, serviceInfo).response())
     } ?: AuthException.InvalidToken()
   }
 
   route(Routes.UPDATE_SERVICE_INFO) {
     val serviceInfo = call.receive<ServiceInfo>()
     call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(updateServiceInfoUseCase.updateServiceInfo(email, serviceInfo))
+      call.respond(updateServiceInfoUseCase.updateServiceInfo(email, serviceInfo).response())
     } ?: AuthException.InvalidToken()
   }
 
   route(Routes.DELETE_SERVICE_INFO) {
     val serviceInfo = call.receive<ServiceInfo>()
     call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(deleteServiceInfoUseCase.deleteServiceInfo(email, serviceInfo))
+      call.respond(deleteServiceInfoUseCase.deleteServiceInfo(email, serviceInfo).response())
     } ?: AuthException.InvalidToken()
   }
 
   route(Routes.DELETE_SERVICE_INFO_BY_ID) {
     val serviceId = call.requireParameter(Param.SERVICE_ID).toInt()
     call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(deleteServiceInfoByIdUseCase.deleteServiceInfo(email, serviceId))
+      call.respond(deleteServiceInfoByIdUseCase.deleteServiceInfo(email, serviceId).response())
     } ?: AuthException.InvalidToken()
   }
 }

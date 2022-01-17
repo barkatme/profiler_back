@@ -17,14 +17,14 @@ class DeleteServiceInfoUseCase(
   private val roleRepository: RoleRepository,
   private val permissionRepository: PermissionRepository
 ) {
-  suspend fun deleteServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Int =
+  suspend fun deleteServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Boolean =
     withContext(Dispatchers.IO) {
       val requiredPermissions =
         permissionRepository.getUrlPermissions(Routes.DELETE_SERVICE_INFO.url)
       val user = userRepository.getByEmail(updaterEmail) ?: throw AuthException.InvalidEmail()
       val userPermissions = roleRepository.getPermissions(user.role)
       if (userPermissions.containsAll(requiredPermissions)) {
-        serviceInfoRepository.delete(serviceInfo)
+        serviceInfoRepository.delete(serviceInfo) != 0
       } else {
         throw RequestException.PermissionDenied()
       }

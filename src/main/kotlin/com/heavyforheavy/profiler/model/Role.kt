@@ -9,7 +9,7 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class Role(
   @SerialName("id") val id: Int = 0,
-  @SerialName("name") val name: String,
+  @SerialName("name") val name: String? = null,
   @SerialName("createdAt") val createdAt: String? = null,
 )
 

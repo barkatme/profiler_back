@@ -6,6 +6,7 @@ import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
 import com.heavyforheavy.profiler.infrastructure.routing.routes.route
 import com.heavyforheavy.profiler.mappers.response
 import com.heavyforheavy.profiler.model.UserService
+import com.heavyforheavy.profiler.model.response
 import com.heavyforheavy.profiler.routes.Param
 import com.heavyforheavy.profiler.routes.Routes
 import io.ktor.application.*
@@ -44,19 +45,21 @@ fun Routing.userServicesRouting() {
 
   route(Routes.ADD_SERVICE) {
     val service = call.receive<UserService>()
-    call.respond(addServiceUseCase.addService(call.getUserIdPrincipal()?.name, service))
+    call.respond(addServiceUseCase.addService(call.getUserIdPrincipal()?.name, service).response())
   }
 
   route(Routes.UPDATE_SERVICE) {
     val service = call.receive<UserService>()
-    call.respond(updateServiceUseCase.updateService(call.getUserIdPrincipal()?.name, service))
+    call.respond(
+      updateServiceUseCase.updateService(call.getUserIdPrincipal()?.name, service).response()
+    )
   }
 
   route(Routes.DELETE_SERVICE) {
     call.respond(
       deleteServiceUseCase.deleteService(
         call.requireParameter(Param.SERVICE_ID).toInt()
-      )
+      ).response()
     )
   }
 }

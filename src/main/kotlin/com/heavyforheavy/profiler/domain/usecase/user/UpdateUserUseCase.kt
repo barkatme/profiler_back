@@ -7,7 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class UpdateUserUseCase(private val userRepository: UserRepository) {
-  suspend fun updateUser(currentUser: User?, user: User) = withContext(Dispatchers.IO) {
+  suspend fun updateUser(currentUser: User?, user: User): User = withContext(Dispatchers.IO) {
     if (currentUser?.id != user.id) {
       throw RequestException.PermissionDenied()
     }

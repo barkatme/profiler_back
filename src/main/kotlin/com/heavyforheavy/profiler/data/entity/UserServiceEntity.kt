@@ -9,11 +9,11 @@ import org.jetbrains.exposed.sql.ResultRow
 data class UserServiceEntity(
   val id: Int = 0,
   val serviceInfoId: Int = 0,
-  val link: String,
-  val name: String,
-  val image: String,
-  val userId: Int,
-  val userLink: String
+  val link: String? = null,
+  val name: String? = null,
+  val image: String? = null,
+  val userId: Int? = null,
+  val userLink: String? = null
 )
 
 fun ResultRow.asUserServiceEntity() = UserServiceEntity(

@@ -8,6 +8,7 @@ import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincip
 import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
 import com.heavyforheavy.profiler.infrastructure.routing.routes.route
 import com.heavyforheavy.profiler.mappers.response
+import com.heavyforheavy.profiler.model.response
 import com.heavyforheavy.profiler.routes.Param
 import com.heavyforheavy.profiler.routes.Routes
 import io.ktor.application.*
@@ -26,7 +27,7 @@ fun Routing.saveUserRoting() {
       saveUserUseCase.saveUser(
         call.getUserIdPrincipal()?.name,
         call.requireParameter(Param.USER_ID).toInt()
-      )
+      ).response()
     )
   }
 
@@ -57,7 +58,7 @@ fun Routing.saveUserRoting() {
       deleteSavedUserUseCase.deleteSavedUser(
         call.getUserIdPrincipal()?.name,
         call.requireParameter(Param.USER_ID).toInt()
-      )
+      ).response()
     )
   }
 }

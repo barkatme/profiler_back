@@ -17,7 +17,7 @@ class AddServiceInfoUseCase(
   private val roleRepository: RoleRepository,
   private val permissionRepository: PermissionRepository
 ) {
-  suspend fun addServiceInfo(creatorEmail: String, serviceInfo: ServiceInfo): Int =
+  suspend fun addServiceInfo(creatorEmail: String, serviceInfo: ServiceInfo): ServiceInfo =
     withContext(Dispatchers.IO) {
       val requiredPermissions = permissionRepository.getUrlPermissions(Routes.ADD_SERVICE_INFO.url)
       val user = userRepository.getByEmail(creatorEmail) ?: throw AuthException.InvalidEmail()

@@ -7,6 +7,15 @@ import kotlinx.serialization.modules.SerializersModuleBuilder
 
 sealed class RequestException : ApiException() {
   @Serializable
+  data class MissedData(
+    val dataDescription: String,
+    override val code: Int = 200
+  ) : RequestException() {
+    override val message: String
+      get() = "missed data: $dataDescription"
+  }
+
+  @Serializable
   data class ParameterNotFound(
     val parameter: Param,
     override val code: Int = 200

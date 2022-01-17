@@ -5,8 +5,8 @@ import com.heavyforheavy.profiler.model.User
 interface UserRepository {
   suspend fun getByEmail(email: String): User?
   suspend fun getById(id: Int): User?
-  suspend fun insert(user: User): Int
-  suspend fun update(user: User): Int
+  suspend fun insert(user: User): User
+  suspend fun update(user: User): User
   suspend fun delete(user: User): Int
   suspend fun delete(id: Int): Int
   suspend fun count(): Int

@@ -16,14 +16,14 @@ class DeleteViewersByIdUseCase(
   private val permissionRepository: PermissionRepository,
   private val roleRepository: RoleRepository
 ) {
-  suspend fun deleteViewers(userId: Int, viewerId: Int, requesterEmail: String?) =
+  suspend fun deleteViewers(userId: Int, viewerId: Int, requesterEmail: String?): Boolean =
     withContext(Dispatchers.IO) {
-      val currentUser =
-        requesterEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
+      val currentUser = requesterEmail?.let { userRepository.getByEmail(it) }
+        ?: throw AuthException.InvalidToken()
       val permissions = permissionRepository.getUrlPermissions(Routes.DELETE_VIEWERS.url)
       val rolePermissions = roleRepository.getPermissions(currentUser.role)
       if (rolePermissions.containsAll(permissions)) {
-        userRelationRepository.deleteViewer(viewerId, userId)
+        userRelationRepository.deleteViewer(viewerId, userId) != 0
       } else {
         throw RequestException.PermissionDenied()
       }

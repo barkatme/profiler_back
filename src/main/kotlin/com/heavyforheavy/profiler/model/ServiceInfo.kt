@@ -9,9 +9,9 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class ServiceInfo(
   @SerialName("id") val id: Int = 0,
-  @SerialName("link") val link: String,
-  @SerialName("name") val name: String,
-  @SerialName("image") val image: String,
+  @SerialName("link") val link: String? = null,
+  @SerialName("name") val name: String? = null,
+  @SerialName("image") val image: String? = null,
 )
 
 fun ServiceInfo.asString(pretty: Boolean = false) =

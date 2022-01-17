@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.ResultRow
 
 data class UserRoleEntity(
   val id: Int = 0,
-  val name: String,
+  val name: String? = null,
   val createdAt: String? = null,
 )
 

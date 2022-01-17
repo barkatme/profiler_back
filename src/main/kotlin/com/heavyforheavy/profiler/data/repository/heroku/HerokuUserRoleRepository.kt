@@ -11,6 +11,7 @@ import com.heavyforheavy.profiler.data.tables.UserRoles
 import com.heavyforheavy.profiler.domain.repository.RoleRepository
 import com.heavyforheavy.profiler.model.Permission
 import com.heavyforheavy.profiler.model.Role
+import com.heavyforheavy.profiler.model.exception.DatabaseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.*
@@ -29,7 +30,11 @@ class HerokuUserRoleRepository : RoleRepository {
       .singleOrNull()
   }
 
-  override suspend fun getPermissions(userRoleId: Int): List<Permission> = dbQuery {
+  override suspend fun getPermissions(userRoleId: Int?): List<Permission> = dbQuery {
+    if (userRoleId == null) {
+      return@dbQuery emptyList()
+    }
+
     (UserRolePermissions innerJoin Permissions).slice(
       Permissions.id,
       Permissions.name,
@@ -46,17 +51,22 @@ class HerokuUserRoleRepository : RoleRepository {
       getPermissions(role.id).contains(permission)
     }
 
-  override suspend fun insert(role: Role): Int = dbQuery {
+  override suspend fun insert(role: Role): Role = dbQuery {
     val entity = role.asUserRoleEntity()
-    UserRoles.insert { it[name] = entity.name } get UserRoles.id
+    UserRoles.insert { table ->
+      entity.name?.let { table[name] = it }
+    }.resultedValues?.firstOrNull()?.asUserRole() ?: throw DatabaseException.OperationFailed()
   }
 
-  override suspend fun update(role: Role): Int = dbQuery {
+  override suspend fun update(role: Role): Role {
     val entity = role.asUserRoleEntity()
-    UserRoles.update(where = { UserRoles.id eq role.id }) {
-      it[name] = entity.name
-      it[createdAt] = DateTime.now()
+    dbQuery {
+      UserRoles.update(where = { UserRoles.id eq role.id }) { table ->
+        entity.name?.let { table[name] = it }
+        table[createdAt] = DateTime.now()
+      }
     }
+    return getById(entity.id) ?: throw DatabaseException.OperationFailed()
   }
 
   override suspend fun delete(role: Role): Int = dbQuery {

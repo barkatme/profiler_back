@@ -35,7 +35,7 @@ fun Routing.usersRouting() {
 
   route(Routes.UPDATE_USER) {
     val currentUser = try {
-      call.getUserIdPrincipal()?.name?.let { it1 -> getUserByEmailUseCase.getUser(it1) }
+      call.getUserIdPrincipal()?.name?.let { email -> getUserByEmailUseCase.getUser(email) }
         ?: call.getToken()?.let {
           getUserByTokenUseCase.getUser(it)
         }
@@ -43,7 +43,7 @@ fun Routing.usersRouting() {
       null
     }
     val updatedUser = call.receive<User>()
-    call.respond(updateUserUseCase.updateUser(currentUser, updatedUser))
+    call.respond(updateUserUseCase.updateUser(currentUser, updatedUser).response())
   }
 
   route(Routes.USER_BY_ID) {

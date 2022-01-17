@@ -15,9 +15,9 @@ class GetViewersUseCase(
     search: String? = null,
     offset: Int? = null,
     limit: Int? = null
-  ) = withContext(Dispatchers.IO) {
-    val currentUser =
-      email?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
+  ): List<UserRelationRepository.ViewerResult> = withContext(Dispatchers.IO) {
+    val currentUser = email?.let { userRepository.getByEmail(it) }
+      ?: throw AuthException.InvalidToken()
     userRelationRepository.getViewers(currentUser.id, search, offset, limit)
   }
 }

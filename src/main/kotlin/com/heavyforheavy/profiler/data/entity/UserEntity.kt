@@ -11,12 +11,11 @@ data class UserEntity(
   val firstName: String? = null,
   val lastName: String? = null,
   val about: String? = null,
-  val email: String,
+  val email: String? = null,
   val isOnline: Boolean? = null,
-  val role: Int = 0,
+  val role: Int? = null,
   val dateRegistration: String? = null,
-
-  val passwordHash: String = "",
+  val passwordHash: String? = null,
   val token: String? = null
 )
 

@@ -17,7 +17,7 @@ class UpdateServiceInfoUseCase(
   private val roleRepository: RoleRepository,
   private val permissionRepository: PermissionRepository
 ) {
-  suspend fun updateServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Int =
+  suspend fun updateServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): ServiceInfo =
     withContext(Dispatchers.IO) {
       val requiredPermissions =
         permissionRepository.getUrlPermissions(Routes.UPDATE_SERVICE_INFO.url)

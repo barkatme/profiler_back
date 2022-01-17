@@ -22,7 +22,7 @@ class GetViewersByIdUseCase(
     search: String? = null,
     offset: Int? = null,
     limit: Int? = null
-  ) = withContext(Dispatchers.IO) {
+  ): List<UserRelationRepository.ViewerResult> = withContext(Dispatchers.IO) {
     val currentUser =
       requesterEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
     val permissions = permissionRepository.getUrlPermissions(Routes.VIEWERS_BY_ID.url)

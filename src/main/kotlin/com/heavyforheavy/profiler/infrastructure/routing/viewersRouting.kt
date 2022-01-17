@@ -9,6 +9,7 @@ import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincip
 import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
 import com.heavyforheavy.profiler.infrastructure.routing.routes.route
 import com.heavyforheavy.profiler.mappers.response
+import com.heavyforheavy.profiler.model.response
 import com.heavyforheavy.profiler.routes.Param
 import com.heavyforheavy.profiler.routes.Routes
 import io.ktor.application.*
@@ -61,7 +62,7 @@ fun Routing.viewedUsersRouting() {
                 userId,
                 viewerId,
                 call.getUserIdPrincipal()?.name
-            )
+            ).response()
         )
     }
 }

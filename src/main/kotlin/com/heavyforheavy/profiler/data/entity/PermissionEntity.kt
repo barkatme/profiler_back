@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.ResultRow
 
 data class PermissionEntity(
   val id: Int = 0,
-  val name: String,
+  val name: String? = null,
   val createdAt: String? = null,
 )
 

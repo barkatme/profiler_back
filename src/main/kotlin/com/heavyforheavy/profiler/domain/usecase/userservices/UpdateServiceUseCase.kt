@@ -14,16 +14,18 @@ class UpdateServiceUseCase(
 ) {
 
   @Suppress("MemberVisibilityCanBePrivate")
-  suspend fun updateService(userService: UserService) = withContext(Dispatchers.IO) {
+  suspend fun updateService(userService: UserService): UserService = withContext(Dispatchers.IO) {
     serviceRepository.updateServiceLink(userService)
   }
 
-  suspend fun updateService(userEmail: String?, userService: UserService) =
+  suspend fun updateService(userEmail: String?, userService: UserService): UserService =
     withContext(Dispatchers.IO) {
-      val user =
-        userEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidEmail()
+      val user = userEmail?.let { userRepository.getByEmail(it) }
+        ?: throw AuthException.InvalidEmail()
       if (user.id != userService.userId) {
-        throw RequestException.OperationFailed(message = "userId of service doesn't equals ")
+        throw RequestException.OperationFailed(
+          message = "userId of service doesn't equals to user's id"
+        )
       }
       updateService(userService)
     }

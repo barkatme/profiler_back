@@ -7,8 +7,8 @@ import com.heavyforheavy.profiler.data.tables.Permissions
 import com.heavyforheavy.profiler.data.tables.UrlPermissions
 import com.heavyforheavy.profiler.domain.repository.PermissionRepository
 import com.heavyforheavy.profiler.model.Permission
+import com.heavyforheavy.profiler.model.exception.DatabaseException
 import org.jetbrains.exposed.sql.*
-import org.joda.time.DateTime
 
 class HerokuPermissionRepository : PermissionRepository {
 
@@ -34,17 +34,26 @@ class HerokuPermissionRepository : PermissionRepository {
       .mapNotNull { it.asPermission() }
   }
 
-  override suspend fun insert(permission: Permission): Int = dbQuery {
-    val entity = permission.asPermissionEntity()
-    Permissions.insert { it[name] = entity.name } get Permissions.id
+  override suspend fun insert(permission: Permission): Permission = dbQuery {
+    permission.asPermissionEntity().name?.let { permissionName ->
+      Permissions.insert { table ->
+        table[name] = permissionName
+      }.resultedValues?.first()
+    }?.asPermission() ?: throw DatabaseException.OperationFailed("permission name invalid")
   }
 
-  override suspend fun update(permission: Permission): Int = dbQuery {
+  override suspend fun update(permission: Permission): Permission {
     val entity = permission.asPermissionEntity()
-    Permissions.update(where = { Permissions.id eq permission.id }) {
-      it[name] = entity.name
-      it[createdAt] = DateTime.now()
+    dbQuery {
+      Permissions.update(where = { Permissions.id eq permission.id }) { table ->
+        entity.name?.let { table[name] = entity.name }
+        //TODO should include field such as "updated_at" instead
+        //table[createdAt] = DateTime.now()
+      }
     }
+    return getById(entity.id) ?: throw DatabaseException.OperationFailed(
+      "updated permission not found"
+    )
   }
 
   override suspend fun delete(permission: Permission): Int = dbQuery {

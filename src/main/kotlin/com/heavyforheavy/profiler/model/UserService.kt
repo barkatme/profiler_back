@@ -11,8 +11,8 @@ import kotlinx.serialization.json.Json
 data class UserService(
   @SerialName("id") val id: Int,
   @SerialName("serviceInfo") val serviceInfo: ServiceInfo = ServiceInfo(0, "", "", ""),
-  @SerialName("userId") val userId: Int,
-  @SerialName("userLink") val userLink: String,
+  @SerialName("userId") val userId: Int? = null,
+  @SerialName("userLink") val userLink: String? = null,
 )
 
 fun UserService.asString(pretty: Boolean = false) =

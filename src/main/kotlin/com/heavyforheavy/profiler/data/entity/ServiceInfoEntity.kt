@@ -7,9 +7,9 @@ import org.jetbrains.exposed.sql.ResultRow
 
 data class ServiceInfoEntity(
   val id: Int = 0,
-  val link: String,
-  val name: String,
-  val image: String,
+  val link: String? = null,
+  val name: String? = null,
+  val image: String? = null,
 )
 
 fun ResultRow.asServiceInfoEntity() = ServiceInfoEntity(

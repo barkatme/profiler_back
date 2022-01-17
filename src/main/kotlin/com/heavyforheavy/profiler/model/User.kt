@@ -10,19 +10,19 @@ import kotlinx.serialization.json.JsonElement
 
 @Serializable
 data class User(
-    @SerialName("id") val id: Int = 0,
-    @SerialName("login") val login: String? = null,
-    @Transient val isDeleted: Boolean = false,
-    @SerialName("firstName") val firstName: String? = null,
-    @SerialName("lastName") val lastName: String? = null,
-    @SerialName("about") val about: String? = null,
-    @SerialName("email") val email: String,
-    @SerialName("online") val isOnline: Boolean? = null,
-    @SerialName("role") val role: Int = 0,
-    @SerialName("dateRegistration") val dateRegistration: String? = null,
+  @SerialName("id") val id: Int = 0,
+  @SerialName("login") val login: String? = null,
+  @Transient val isDeleted: Boolean = false,
+  @SerialName("firstName") val firstName: String? = null,
+  @SerialName("lastName") val lastName: String? = null,
+  @SerialName("about") val about: String? = null,
+  @SerialName("email") val email: String? = null,
+  @SerialName("online") val isOnline: Boolean? = null,
+  @SerialName("role") val role: Int? = null,
+  @SerialName("dateRegistration") val dateRegistration: String? = null,
 
-    @Transient val passwordHash: String = "",
-    @Transient var token: String? = null
+  @Transient val passwordHash: String? = null,
+  @Transient var token: String? = null
 )
 
 fun User.asString(pretty: Boolean = false) =
