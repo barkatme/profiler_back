@@ -1,1 +1,1 @@
-rootProject.name = "com.heavyforheavy.profiler.backend"
+rootProject.name = "profiler"
