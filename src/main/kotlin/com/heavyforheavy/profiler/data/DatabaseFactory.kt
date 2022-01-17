@@ -15,7 +15,8 @@ object DatabaseFactory {
         ?: "jdbc:postgresql://ec2-54-247-122-209.eu-west-1.compute.amazonaws.com:5432/d18uskgncuue97?sslmode=require"
     private val dbUser = System.getenv("DB_USER") ?: "atdvagtkqrbzpg"
     private val dbPassword =
-        System.getenv("DB_PASSWORD") ?: "17a6cedde6f4b21c0dc13fec84bafa1cba107c2f6ee964b06a9e8a9a26382efd"
+        System.getenv("DB_PASSWORD")
+            ?: "17a6cedde6f4b21c0dc13fec84bafa1cba107c2f6ee964b06a9e8a9a26382efd"
 
     fun init() {
         Database.connect(hikari())

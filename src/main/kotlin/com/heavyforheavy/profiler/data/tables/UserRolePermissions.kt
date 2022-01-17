@@ -7,18 +7,18 @@ import org.joda.time.DateTime
 
 object UserRolePermissions : Table("USER_ROLE_PERMISSIONS") {
 
-    val id: Column<Int> = integer("id")
-        .autoIncrement()
-        .primaryKey()
+  val id: Column<Int> = integer("id")
+    .autoIncrement()
+    .primaryKey()
 
-    val userRoleId: Column<Int> =
-        UserRolePermissions.integer("user_role_id")
-            .references(UserRoles.id, ReferenceOption.CASCADE, ReferenceOption.CASCADE)
+  val userRoleId: Column<Int> =
+    UserRolePermissions.integer("user_role_id")
+      .references(UserRoles.id, ReferenceOption.CASCADE, ReferenceOption.CASCADE)
 
-    val permissionId: Column<Int> =
-        UserRolePermissions.integer("permission_id")
-            .references(Permissions.id, ReferenceOption.CASCADE, ReferenceOption.CASCADE)
+  val permissionId: Column<Int> =
+    UserRolePermissions.integer("permission_id")
+      .references(Permissions.id, ReferenceOption.CASCADE, ReferenceOption.CASCADE)
 
-    val createdAt: Column<DateTime> = datetime("created_at")
-    
+  val createdAt: Column<DateTime> = datetime("created_at")
+
 }

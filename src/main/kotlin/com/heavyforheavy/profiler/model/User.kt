@@ -25,10 +25,14 @@ data class User(
     @Transient var token: String? = null
 )
 
-fun User.asString(pretty: Boolean = false) = Json.instance(pretty).encodeToString(User.serializer(), this)
+fun User.asString(pretty: Boolean = false) =
+    Json.instance(pretty).encodeToString(User.serializer(), this)
 
-fun User.asJson(pretty: Boolean = false) = Json.instance(pretty).encodeToJsonElement(User.serializer(), this)
-fun JsonElement.asUser(pretty: Boolean = false) = Json.instance(pretty).decodeFromJsonElement(User.serializer(), this)
+fun User.asJson(pretty: Boolean = false) =
+    Json.instance(pretty).encodeToJsonElement(User.serializer(), this)
+
+fun JsonElement.asUser(pretty: Boolean = false) =
+    Json.instance(pretty).decodeFromJsonElement(User.serializer(), this)
 
 fun List<User>.asJson(pretty: Boolean = false) =
     Json.instance(pretty).encodeToJsonElement(ListSerializer(User.serializer()), this)

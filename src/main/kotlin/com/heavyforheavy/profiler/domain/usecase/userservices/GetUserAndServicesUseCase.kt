@@ -15,53 +15,52 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.json.Json
 
 class GetUserAndServicesUseCase(
-    private val serviceRepository: UserServiceRepository,
-    private val userRepository: UserRepository
+  private val serviceRepository: UserServiceRepository,
+  private val userRepository: UserRepository
 ) {
 
-    @Serializable
-    data class UserAndServices(
-        @SerialName("user") val user: User,
-        @SerialName("services") val services: List<UserService>
-    )
+  @Serializable
+  data class UserAndServices(
+    @SerialName("user") val user: User,
+    @SerialName("services") val services: List<UserService>
+  )
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    suspend fun getServices(userId: Int) = withContext(Dispatchers.IO) {
-        val user = userRepository.getById(userId)
-            ?: throw RequestException.OperationFailed(message = "user with such id wasn't found")
-        getServices(user)
-    }
+  @Suppress("MemberVisibilityCanBePrivate")
+  suspend fun getServices(userId: Int) = withContext(Dispatchers.IO) {
+    val user = userRepository.getById(userId)
+      ?: throw RequestException.OperationFailed(message = "user with such id wasn't found")
+    getServices(user)
+  }
 
-    suspend fun getServices(userEmail: String?) = withContext(Dispatchers.IO) {
-        val user = userEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidEmail()
-        getServices(user)
-    }
+  suspend fun getServices(userEmail: String?) = withContext(Dispatchers.IO) {
+    val user =
+      userEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidEmail()
+    getServices(user)
+  }
 
-    private suspend fun getServices(user: User) = withContext(Dispatchers.IO) {
-        val services = serviceRepository.getByUserId(user.id)
-        UserAndServices(user, services)
-    }
+  private suspend fun getServices(user: User) = withContext(Dispatchers.IO) {
+    val services = serviceRepository.getByUserId(user.id)
+    UserAndServices(user, services)
+  }
 }
 
 
-
-
 fun GetUserAndServicesUseCase.UserAndServices.asString(pretty: Boolean = false) = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = true
-    prettyPrint = pretty
+  ignoreUnknownKeys = true
+  encodeDefaults = true
+  prettyPrint = pretty
 }.encodeToString(GetUserAndServicesUseCase.UserAndServices.serializer(), this)
 
 fun GetUserAndServicesUseCase.UserAndServices.asJson(pretty: Boolean = false) = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = true
-    prettyPrint = pretty
+  ignoreUnknownKeys = true
+  encodeDefaults = true
+  prettyPrint = pretty
 }.encodeToJsonElement(GetUserAndServicesUseCase.UserAndServices.serializer(), this)
 
 fun List<GetUserAndServicesUseCase.UserAndServices>.asJson(pretty: Boolean = false) = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = true
-    prettyPrint = pretty
+  ignoreUnknownKeys = true
+  encodeDefaults = true
+  prettyPrint = pretty
 }.encodeToJsonElement(ListSerializer(GetUserAndServicesUseCase.UserAndServices.serializer()), this)
 
 fun GetUserAndServicesUseCase.UserAndServices.response() = CustomResponse(this.asJson())

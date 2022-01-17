@@ -11,19 +11,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class DeleteViewersUseCase(
-    private val userRelationRepository: UserRelationRepository,
-    private val userRepository: UserRepository,
-    private val permissionRepository: PermissionRepository,
-    private val roleRepository: RoleRepository
+  private val userRelationRepository: UserRelationRepository,
+  private val userRepository: UserRepository,
+  private val permissionRepository: PermissionRepository,
+  private val roleRepository: RoleRepository
 ) {
-    suspend fun deleteViewers(userId: Int, requesterEmail: String?) = withContext(Dispatchers.IO) {
-        val currentUser = requesterEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
-        val permissions = permissionRepository.getUrlPermissions(Routes.DELETE_VIEWERS_BY_ID.url)
-        val rolePermissions = roleRepository.getPermissions(currentUser.role)
-        if (rolePermissions.containsAll(permissions)) {
-            userRelationRepository.deleteViewers(userId)
-        } else {
-            throw RequestException.PermissionDenied()
-        }
+  suspend fun deleteViewers(userId: Int, requesterEmail: String?) = withContext(Dispatchers.IO) {
+    val currentUser =
+      requesterEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidToken()
+    val permissions = permissionRepository.getUrlPermissions(Routes.DELETE_VIEWERS_BY_ID.url)
+    val rolePermissions = roleRepository.getPermissions(currentUser.role)
+    if (rolePermissions.containsAll(permissions)) {
+      userRelationRepository.deleteViewers(userId)
+    } else {
+      throw RequestException.PermissionDenied()
     }
+  }
 }

@@ -22,7 +22,6 @@ import io.ktor.auth.jwt.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.util.*
 import org.koin.ktor.ext.get
 import java.time.Instant
 import java.util.*
@@ -57,7 +56,8 @@ fun Application.authModule(@Suppress("UNUSED_PARAMETER") testing: Boolean = fals
                 tokenChecker = {
                     try {
                         val decodedJWT = simpleJwt.verifier.verify(it)
-                        decodedJWT.expiresAt?.let { date -> date > Date.from(Instant.now()) } ?: false
+                        decodedJWT.expiresAt?.let { date -> date > Date.from(Instant.now()) }
+                            ?: false
                     } catch (e: TokenExpiredException) {
                         false
                     }
@@ -73,14 +73,17 @@ fun Application.authModule(@Suppress("UNUSED_PARAMETER") testing: Boolean = fals
             val resultUser = signUpUseCase.signUp(userWithEmailAndPassword) {
                 simpleJwt.sign(userWithEmailAndPassword.email)
             }
-            val token = resultUser.token ?: throw RequestException.OperationFailed(message = "new user has NULL token")
+            val token = resultUser.token
+                ?: throw RequestException.OperationFailed(message = "new user has NULL token")
             call.respond(Token(token).response())
         }
 
         route(Routes.AUTH_SIGN_OUT) {
-            val currentUser = call.getUserIdPrincipal()?.name?.let { email -> getUserByEmailUseCase.getUser(email) }
-                ?: throw AuthException.InvalidToken()
-            val newToken = signOutUseCase.signOut(currentUser.email) { simpleJwt.sign(currentUser.email) }
+            val currentUser =
+                call.getUserIdPrincipal()?.name?.let { email -> getUserByEmailUseCase.getUser(email) }
+                    ?: throw AuthException.InvalidToken()
+            val newToken =
+                signOutUseCase.signOut(currentUser.email) { simpleJwt.sign(currentUser.email) }
             call.respond(Token(newToken).response())
         }
     }

@@ -6,7 +6,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetUserByEmailUseCase(private val userRepository: UserRepository) {
-    suspend fun getUser(email: String): User? = withContext(Dispatchers.IO) {
-        userRepository.getByEmail(email)
-    }
+  suspend fun getUser(email: String): User? = withContext(Dispatchers.IO) {
+    userRepository.getByEmail(email)
+  }
 }

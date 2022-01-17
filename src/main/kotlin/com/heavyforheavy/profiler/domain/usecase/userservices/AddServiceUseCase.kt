@@ -10,18 +10,20 @@ import kotlinx.coroutines.withContext
 
 
 class AddServiceUseCase(
-    private val serviceRepository: UserServiceRepository,
-    private val userRepository: UserRepository
+  private val serviceRepository: UserServiceRepository,
+  private val userRepository: UserRepository
 ) {
 
-    @Suppress("MemberVisibilityCanBePrivate")
-    suspend fun addService(userId: Int, userService: UserService) = withContext(Dispatchers.IO) {
-        val entity = userService.asUserServiceEntity()
-        serviceRepository.addService(userId, entity.id, entity.userLink)
-    }
+  @Suppress("MemberVisibilityCanBePrivate")
+  suspend fun addService(userId: Int, userService: UserService) = withContext(Dispatchers.IO) {
+    val entity = userService.asUserServiceEntity()
+    serviceRepository.addService(userId, entity.id, entity.userLink)
+  }
 
-    suspend fun addService(userEmail: String?, userService: UserService) = withContext(Dispatchers.IO) {
-        val user = userEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidEmail()
-        addService(user.id, userService)
+  suspend fun addService(userEmail: String?, userService: UserService) =
+    withContext(Dispatchers.IO) {
+      val user =
+        userEmail?.let { userRepository.getByEmail(it) } ?: throw AuthException.InvalidEmail()
+      addService(user.id, userService)
     }
 }

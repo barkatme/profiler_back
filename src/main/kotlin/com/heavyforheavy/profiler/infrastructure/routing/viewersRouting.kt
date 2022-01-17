@@ -56,6 +56,12 @@ fun Routing.viewedUsersRouting() {
     route(Routes.DELETE_VIEWERS_BY_ID) {
         val userId = call.requireParameter(Param.USER_ID).toInt()
         val viewerId = call.requireParameter(Param.VIEWER_ID).toInt()
-        call.respond(deleteViewersByIdUseCase.deleteViewers(userId, viewerId, call.getUserIdPrincipal()?.name))
+        call.respond(
+            deleteViewersByIdUseCase.deleteViewers(
+                userId,
+                viewerId,
+                call.getUserIdPrincipal()?.name
+            )
+        )
     }
 }

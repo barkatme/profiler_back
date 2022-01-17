@@ -12,19 +12,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class UpdateServiceInfoUseCase(
-    private val serviceInfoRepository: ServiceInfoRepository,
-    private val userRepository: UserRepository,
-    private val roleRepository: RoleRepository,
-    private val permissionRepository: PermissionRepository
+  private val serviceInfoRepository: ServiceInfoRepository,
+  private val userRepository: UserRepository,
+  private val roleRepository: RoleRepository,
+  private val permissionRepository: PermissionRepository
 ) {
-    suspend fun updateServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Int = withContext(Dispatchers.IO) {
-        val requiredPermissions = permissionRepository.getUrlPermissions(Routes.UPDATE_SERVICE_INFO.url)
-        val user = userRepository.getByEmail(updaterEmail) ?: throw AuthException.InvalidEmail()
-        val userPermissions = roleRepository.getPermissions(user.role)
-        if (userPermissions.containsAll(requiredPermissions)) {
-            serviceInfoRepository.update(serviceInfo)
-        } else {
-            throw RequestException.PermissionDenied()
-        }
+  suspend fun updateServiceInfo(updaterEmail: String, serviceInfo: ServiceInfo): Int =
+    withContext(Dispatchers.IO) {
+      val requiredPermissions =
+        permissionRepository.getUrlPermissions(Routes.UPDATE_SERVICE_INFO.url)
+      val user = userRepository.getByEmail(updaterEmail) ?: throw AuthException.InvalidEmail()
+      val userPermissions = roleRepository.getPermissions(user.role)
+      if (userPermissions.containsAll(requiredPermissions)) {
+        serviceInfoRepository.update(serviceInfo)
+      } else {
+        throw RequestException.PermissionDenied()
+      }
     }
 }

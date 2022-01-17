@@ -8,13 +8,13 @@ import io.ktor.routing.*
 
 @Suppress("DEPRECATION")
 fun Routing.homeRouting() {
-    get("/") {
-        call.respondText(
-            this::class.java.classLoader.getResource("index.html")!!.readText(),
-            ContentType.Text.Html
-        )
-    }
-    static("/") {
-        resources("")
-    }
+  get("/") {
+    call.respondText(
+      this::class.java.classLoader.getResource("index.html")!!.readText(),
+      ContentType.Text.Html
+    )
+  }
+  static("/") {
+    resources("")
+  }
 }

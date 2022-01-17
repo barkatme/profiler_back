@@ -38,13 +38,21 @@ enum class Routes(
     ADD_SERVICE_INFO("serviceInfo", method = HttpMethod.Put, requireAuth = true),
     UPDATE_SERVICE_INFO("serviceInfo", method = HttpMethod.Post, requireAuth = true),
     DELETE_SERVICE_INFO("serviceInfo", method = HttpMethod.Delete, requireAuth = true),
-    DELETE_SERVICE_INFO_BY_ID("serviceInfo/{${Param.SERVICE_ID}}", method = HttpMethod.Delete, requireAuth = true),
+    DELETE_SERVICE_INFO_BY_ID(
+        "serviceInfo/{${Param.SERVICE_ID}}",
+        method = HttpMethod.Delete,
+        requireAuth = true
+    ),
 
     //saved user
     SAVED_USERS("savedUsers", requireAuth = true),
     SAVED_USERS_BY_ID("savedUsers/{${Param.USER_ID}}", requireAuth = true),
     SAVE_USER("saveUser/{${Param.USER_ID}}", requireAuth = true),
-    DELETE_SAVED_USER("savedUsers/{${Param.USER_ID}}", method = HttpMethod.Delete, requireAuth = true),
+    DELETE_SAVED_USER(
+        "savedUsers/{${Param.USER_ID}}",
+        method = HttpMethod.Delete,
+        requireAuth = true
+    ),
 
     //user's services
     USER_AND_SERVICES("userServices", requireAuth = true),
@@ -53,5 +61,9 @@ enum class Routes(
     USER_SERVICES_BY_ID("services/{${Param.USER_ID}}"),
     ADD_SERVICE("service", method = HttpMethod.Put, requireAuth = true),
     UPDATE_SERVICE("service", method = HttpMethod.Post, requireAuth = true),
-    DELETE_SERVICE("service/{${Param.SERVICE_ID}}", method = HttpMethod.Delete, requireAuth = true), ;
+    DELETE_SERVICE(
+        "service/{${Param.SERVICE_ID}}",
+        method = HttpMethod.Delete,
+        requireAuth = true
+    ), ;
 }

@@ -48,7 +48,12 @@ class HerokuUserRelationRepository : UserRelationRepository {
         ).select { ViewedUsers.viewedUserId eq userId }
         search?.let { query.adjustWhere { Users.first_name.regexp(it) or Users.last_name.regexp(it) } }
         query.limitAndOffset(limit, offset)
-        query.map { UserRelationRepository.ViewerResult(it.asUser(), it[ViewedUsers.lastTime].toString()) }
+        query.map {
+            UserRelationRepository.ViewerResult(
+                it.asUser(),
+                it[ViewedUsers.lastTime].toString()
+            )
+        }
     }
 
     override suspend fun deleteViewer(viewerId: Int, userId: Int): Int = dbQuery {
@@ -92,7 +97,12 @@ class HerokuUserRelationRepository : UserRelationRepository {
         }
         search?.let { query.adjustWhere { Users.first_name.like("%$it%") or Users.last_name.like("%$it%") } }
         query.limitAndOffset(limit, offset)
-        query.map { UserRelationRepository.SavedUserResult(it.asUser(), it[SavedUsers.createdAt].toString()) }
+        query.map {
+            UserRelationRepository.SavedUserResult(
+                it.asUser(),
+                it[SavedUsers.createdAt].toString()
+            )
+        }
     }
 
     override suspend fun deleteSavedUser(userId: Int, savedUserId: Int): Int = dbQuery {

@@ -5,11 +5,11 @@ import io.ktor.features.*
 import io.ktor.gson.*
 
 
-fun Application.serializationModule(){
-    install(ContentNegotiation) {
-        gson{
-            setPrettyPrinting()
-            disableHtmlEscaping()
-        }
+fun Application.serializationModule() {
+  install(ContentNegotiation) {
+    gson {
+      setPrettyPrinting()
+      disableHtmlEscaping()
     }
+  }
 }

@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetServiceInfoUseCase(
-    private val serviceInfoRepository: ServiceInfoRepository
+  private val serviceInfoRepository: ServiceInfoRepository
 ) {
-    suspend fun getServiceInfo(serviceInfoId: Int): ServiceInfo? = withContext(Dispatchers.IO) {
-        serviceInfoRepository.getById(serviceInfoId)
-    }
+  suspend fun getServiceInfo(serviceInfoId: Int): ServiceInfo? = withContext(Dispatchers.IO) {
+    serviceInfoRepository.getById(serviceInfoId)
+  }
 }

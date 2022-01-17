@@ -13,19 +13,19 @@ import kotlinx.serialization.modules.SerializersModuleBuilder
 @Serializable
 data class CustomResponse(
 //    @Polymorphic
-    @SerialName("data") val data: JsonElement? = null,
-    @Polymorphic
-    @SerialName("error") val error: ApiException? = null,
+  @SerialName("data") val data: JsonElement? = null,
+  @Polymorphic
+  @SerialName("error") val error: ApiException? = null,
 )
 
 fun CustomResponse.asString(pretty: Boolean = false) = Json {
-    ignoreUnknownKeys = true
-    encodeDefaults = true
-    prettyPrint = pretty
-    serializersModule = SerializersModule {
-        dataPolymorphic()
-        errorPolymorphic()
-    }
+  ignoreUnknownKeys = true
+  encodeDefaults = true
+  prettyPrint = pretty
+  serializersModule = SerializersModule {
+    dataPolymorphic()
+    errorPolymorphic()
+  }
 }.encodeToString(CustomResponse.serializer(), this)
 
 fun SerializersModuleBuilder.dataPolymorphic() {

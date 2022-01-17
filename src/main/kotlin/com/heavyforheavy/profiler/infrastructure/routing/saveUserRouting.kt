@@ -17,47 +17,47 @@ import org.koin.ktor.ext.get
 
 fun Routing.saveUserRoting() {
 
-    val getSavedUsersUseCase: GetSavedUsersUseCase = get()
-    val saveUserUseCase: SaveUserUseCase = get()
-    val deleteSavedUserUseCase: DeleteSavedUserUseCase = get()
+  val getSavedUsersUseCase: GetSavedUsersUseCase = get()
+  val saveUserUseCase: SaveUserUseCase = get()
+  val deleteSavedUserUseCase: DeleteSavedUserUseCase = get()
 
-    route(Routes.SAVE_USER) {
-        call.respond(
-            saveUserUseCase.saveUser(
-                call.getUserIdPrincipal()?.name,
-                call.requireParameter(Param.USER_ID).toInt()
-            )
-        )
-    }
+  route(Routes.SAVE_USER) {
+    call.respond(
+      saveUserUseCase.saveUser(
+        call.getUserIdPrincipal()?.name,
+        call.requireParameter(Param.USER_ID).toInt()
+      )
+    )
+  }
 
-    route(Routes.SAVED_USERS) {
-        call.respond(
-            getSavedUsersUseCase.getSavedUsers(
-                call.getUserIdPrincipal()?.name,
-                call.getParameter(Param.SEARCH),
-                call.getParameter(Param.OFFSET)?.toIntOrNull(),
-                call.getParameter(Param.LIMIT)?.toIntOrNull()
-            ).response()
-        )
-    }
+  route(Routes.SAVED_USERS) {
+    call.respond(
+      getSavedUsersUseCase.getSavedUsers(
+        call.getUserIdPrincipal()?.name,
+        call.getParameter(Param.SEARCH),
+        call.getParameter(Param.OFFSET)?.toIntOrNull(),
+        call.getParameter(Param.LIMIT)?.toIntOrNull()
+      ).response()
+    )
+  }
 
-    route(Routes.SAVED_USERS_BY_ID) {
-        call.respond(
-            getSavedUsersUseCase.getSavedUsers(
-                call.requireParameter(Param.USER_ID).toInt(),
-                call.getParameter(Param.SEARCH),
-                call.getParameter(Param.OFFSET)?.toIntOrNull(),
-                call.getParameter(Param.LIMIT)?.toIntOrNull()
-            ).response()
-        )
-    }
+  route(Routes.SAVED_USERS_BY_ID) {
+    call.respond(
+      getSavedUsersUseCase.getSavedUsers(
+        call.requireParameter(Param.USER_ID).toInt(),
+        call.getParameter(Param.SEARCH),
+        call.getParameter(Param.OFFSET)?.toIntOrNull(),
+        call.getParameter(Param.LIMIT)?.toIntOrNull()
+      ).response()
+    )
+  }
 
-    route(Routes.DELETE_SAVED_USER) {
-        call.respond(
-            deleteSavedUserUseCase.deleteSavedUser(
-                call.getUserIdPrincipal()?.name,
-                call.requireParameter(Param.USER_ID).toInt()
-            )
-        )
-    }
+  route(Routes.DELETE_SAVED_USER) {
+    call.respond(
+      deleteSavedUserUseCase.deleteSavedUser(
+        call.getUserIdPrincipal()?.name,
+        call.requireParameter(Param.USER_ID).toInt()
+      )
+    )
+  }
 }

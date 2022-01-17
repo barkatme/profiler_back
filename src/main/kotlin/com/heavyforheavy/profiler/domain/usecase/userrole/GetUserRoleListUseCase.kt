@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 
 class GetUserRoleListUseCase(private val roleRepository: RoleRepository) {
 
-    suspend fun getUserRoles(): List<Role> = withContext(Dispatchers.IO) {
-        roleRepository.getAll()
-    }
+  suspend fun getUserRoles(): List<Role> = withContext(Dispatchers.IO) {
+    roleRepository.getAll()
+  }
 }

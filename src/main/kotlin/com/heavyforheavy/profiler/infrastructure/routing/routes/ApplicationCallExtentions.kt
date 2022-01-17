@@ -6,14 +6,14 @@ import io.ktor.application.*
 import io.ktor.auth.*
 
 fun ApplicationCall.getUserIdPrincipal(): UserIdPrincipal? {
-    return principal()
+  return principal()
 }
 
 fun ApplicationCall.getToken(): String? {
-    return request.headers["Authorization"]?.split(" ")?.takeIf { it.size > 1 }?.run { this[1] }
+  return request.headers["Authorization"]?.split(" ")?.takeIf { it.size > 1 }?.run { this[1] }
 }
 
 fun ApplicationCall.getParameter(param: Param): String? = parameters[param.key]
 
 fun ApplicationCall.requireParameter(param: Param): String =
-    getParameter(param) ?: throw RequestException.ParameterNotFound(param)
+  getParameter(param) ?: throw RequestException.ParameterNotFound(param)

@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetRolePermissionsUseCase(
-    private val roleRepository: RoleRepository
+  private val roleRepository: RoleRepository
 ) {
-    suspend fun getUserPermissions(roleId: Int): List<Permission> = withContext(Dispatchers.IO) {
-        roleRepository.getPermissions(roleId)
-    }
+  suspend fun getUserPermissions(roleId: Int): List<Permission> = withContext(Dispatchers.IO) {
+    roleRepository.getPermissions(roleId)
+  }
 }

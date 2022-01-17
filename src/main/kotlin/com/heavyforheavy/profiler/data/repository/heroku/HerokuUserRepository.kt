@@ -46,7 +46,7 @@ class HerokuUserRepository : UserRepository {
             it[first_name] = entity.firstName
             it[last_name] = entity.lastName
             it[active] = entity.isOnline
-            entity.token?.let{ userToken -> it[token] = userToken }
+            entity.token?.let { userToken -> it[token] = userToken }
         }
     }
 

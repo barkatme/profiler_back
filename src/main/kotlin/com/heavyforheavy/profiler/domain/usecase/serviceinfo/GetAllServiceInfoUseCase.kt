@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GetAllServiceInfoUseCase(
-    private val serviceInfoRepository: ServiceInfoRepository
+  private val serviceInfoRepository: ServiceInfoRepository
 ) {
-    suspend fun getServiceInfos(): List<ServiceInfo> = withContext(Dispatchers.IO) {
-        serviceInfoRepository.getAll()
-    }
+  suspend fun getServiceInfos(): List<ServiceInfo> = withContext(Dispatchers.IO) {
+    serviceInfoRepository.getAll()
+  }
 }
