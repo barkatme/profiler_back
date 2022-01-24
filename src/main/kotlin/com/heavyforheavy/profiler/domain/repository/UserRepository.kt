@@ -1,6 +1,6 @@
 package com.heavyforheavy.profiler.domain.repository
 
-import com.heavyforheavy.profiler.model.User
+import com.heavyforheavy.profiler.infrastructure.model.User
 
 interface UserRepository {
   suspend fun getByEmail(email: String): User?

@@ -5,8 +5,8 @@ import com.heavyforheavy.profiler.data.entity.asServiceInfo
 import com.heavyforheavy.profiler.data.entity.asServiceInfoEntity
 import com.heavyforheavy.profiler.data.tables.ServiceInfos
 import com.heavyforheavy.profiler.domain.repository.ServiceInfoRepository
-import com.heavyforheavy.profiler.model.ServiceInfo
-import com.heavyforheavy.profiler.model.exception.DatabaseException
+import com.heavyforheavy.profiler.infrastructure.model.ServiceInfo
+import com.heavyforheavy.profiler.infrastructure.model.exception.DatabaseException
 import org.jetbrains.exposed.sql.*
 
 class HerokuServiceInfoRepository : ServiceInfoRepository {

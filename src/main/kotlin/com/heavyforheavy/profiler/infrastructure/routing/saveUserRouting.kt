@@ -1,16 +1,13 @@
 package com.heavyforheavy.profiler.infrastructure.routing
 
-import com.heavyforheavy.profiler.domain.usecase.saveuser.DeleteSavedUserUseCase
-import com.heavyforheavy.profiler.domain.usecase.saveuser.GetSavedUsersUseCase
-import com.heavyforheavy.profiler.domain.usecase.saveuser.SaveUserUseCase
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincipal
-import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.route
-import com.heavyforheavy.profiler.mappers.response
-import com.heavyforheavy.profiler.model.response
-import com.heavyforheavy.profiler.routes.Param
-import com.heavyforheavy.profiler.routes.Routes
+import com.heavyforheavy.profiler.domain.usecase.saveuser.*
+import com.heavyforheavy.profiler.infrastructure.model.response
+import com.heavyforheavy.profiler.infrastructure.routing.models.Param
+import com.heavyforheavy.profiler.infrastructure.routing.models.ProfilerRoute
+import com.heavyforheavy.profiler.infrastructure.routing.utils.getParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireTokenData
+import com.heavyforheavy.profiler.infrastructure.routing.utils.route
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -22,43 +19,53 @@ fun Routing.saveUserRoting() {
   val saveUserUseCase: SaveUserUseCase = get()
   val deleteSavedUserUseCase: DeleteSavedUserUseCase = get()
 
-  route(Routes.SAVE_USER) {
+  route(ProfilerRoute.SAVE_USER) {
     call.respond(
-      saveUserUseCase.saveUser(
-        call.getUserIdPrincipal()?.name,
-        call.requireParameter(Param.USER_ID).toInt()
-      ).response()
+      saveUserUseCase.invoke(
+        SaveUserAction.ByEmail(
+          call.requireTokenData().email,
+          call.requireParameter(Param.USER_ID).toInt()
+        )
+      ).savedUser.response()
     )
   }
 
-  route(Routes.SAVED_USERS) {
+  route(ProfilerRoute.SAVED_USERS) {
     call.respond(
-      getSavedUsersUseCase.getSavedUsers(
-        call.getUserIdPrincipal()?.name,
-        call.getParameter(Param.SEARCH),
-        call.getParameter(Param.OFFSET)?.toIntOrNull(),
-        call.getParameter(Param.LIMIT)?.toIntOrNull()
-      ).response()
+      getSavedUsersUseCase.invoke(
+        GetSavedUsersAction(
+          call.requireTokenData().id,
+          call.getParameter(Param.SEARCH),
+          call.getParameter(Param.OFFSET)?.toIntOrNull(),
+          call.getParameter(Param.LIMIT)?.toIntOrNull(),
+          call.requireTokenData().id
+        )
+      ).savedUsers.response()
     )
   }
 
-  route(Routes.SAVED_USERS_BY_ID) {
+  route(ProfilerRoute.SAVED_USERS_BY_ID) {
     call.respond(
-      getSavedUsersUseCase.getSavedUsers(
-        call.requireParameter(Param.USER_ID).toInt(),
-        call.getParameter(Param.SEARCH),
-        call.getParameter(Param.OFFSET)?.toIntOrNull(),
-        call.getParameter(Param.LIMIT)?.toIntOrNull()
-      ).response()
+      getSavedUsersUseCase.invoke(
+        GetSavedUsersAction(
+          call.requireParameter(Param.USER_ID).toInt(),
+          call.getParameter(Param.SEARCH),
+          call.getParameter(Param.OFFSET)?.toIntOrNull(),
+          call.getParameter(Param.LIMIT)?.toIntOrNull(),
+          call.requireTokenData().id
+        )
+      ).savedUsers.response()
     )
   }
 
-  route(Routes.DELETE_SAVED_USER) {
+  route(ProfilerRoute.DELETE_SAVED_USER) {
     call.respond(
-      deleteSavedUserUseCase.deleteSavedUser(
-        call.getUserIdPrincipal()?.name,
-        call.requireParameter(Param.USER_ID).toInt()
-      ).response()
+      deleteSavedUserUseCase.invoke(
+        DeleteSavedUserAction.ByEmail(
+          call.requireTokenData().email,
+          call.requireParameter(Param.USER_ID).toInt()
+        )
+      ).isDeleted.response()
     )
   }
 }

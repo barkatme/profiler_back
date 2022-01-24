@@ -1,7 +1,7 @@
 package com.heavyforheavy.profiler.data.entity
 
 import com.heavyforheavy.profiler.data.tables.Users
-import com.heavyforheavy.profiler.model.User
+import com.heavyforheavy.profiler.infrastructure.model.User
 import org.jetbrains.exposed.sql.ResultRow
 
 data class UserEntity(
@@ -11,7 +11,7 @@ data class UserEntity(
   val firstName: String? = null,
   val lastName: String? = null,
   val about: String? = null,
-  val email: String? = null,
+  val email: String,
   val isOnline: Boolean? = null,
   val role: Int? = null,
   val dateRegistration: String? = null,

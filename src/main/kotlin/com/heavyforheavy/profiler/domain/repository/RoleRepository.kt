@@ -1,7 +1,7 @@
 package com.heavyforheavy.profiler.domain.repository
 
-import com.heavyforheavy.profiler.model.Permission
-import com.heavyforheavy.profiler.model.Role
+import com.heavyforheavy.profiler.infrastructure.model.Permission
+import com.heavyforheavy.profiler.infrastructure.model.Role
 
 interface RoleRepository {
 

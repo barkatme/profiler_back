@@ -1,17 +1,13 @@
 package com.heavyforheavy.profiler.infrastructure.routing
 
-import com.heavyforheavy.profiler.domain.usecase.viewers.DeleteViewersByIdUseCase
-import com.heavyforheavy.profiler.domain.usecase.viewers.DeleteViewersUseCase
-import com.heavyforheavy.profiler.domain.usecase.viewers.GetViewersByIdUseCase
-import com.heavyforheavy.profiler.domain.usecase.viewers.GetViewersUseCase
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincipal
-import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.route
-import com.heavyforheavy.profiler.mappers.response
-import com.heavyforheavy.profiler.model.response
-import com.heavyforheavy.profiler.routes.Param
-import com.heavyforheavy.profiler.routes.Routes
+import com.heavyforheavy.profiler.domain.usecase.viewers.*
+import com.heavyforheavy.profiler.infrastructure.model.response
+import com.heavyforheavy.profiler.infrastructure.routing.models.Param
+import com.heavyforheavy.profiler.infrastructure.routing.models.ProfilerRoute
+import com.heavyforheavy.profiler.infrastructure.routing.utils.getParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireTokenData
+import com.heavyforheavy.profiler.infrastructure.routing.utils.route
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -20,49 +16,53 @@ import org.koin.ktor.ext.get
 
 fun Routing.viewedUsersRouting() {
 
-    val getViewersUseCase: GetViewersUseCase = get()
-    val getViewersByIdUseCase: GetViewersByIdUseCase = get()
-    val deleteViewersByIdUseCase: DeleteViewersByIdUseCase = get()
-    val deleteViewersUseCase: DeleteViewersUseCase = get()
+  val getViewersUseCase: GetViewersUseCase = get()
+  val getViewersByIdUseCase: GetViewersByIdUseCase = get()
+  val deleteViewersByIdUseCase: DeleteViewersByIdUseCase = get()
+  val deleteViewersUseCase: DeleteViewersUseCase = get()
 
-    route(Routes.VIEWERS) {
-        call.respond(
-            getViewersUseCase.getViewedUsers(
-                call.getUserIdPrincipal()?.name,
-                call.getParameter(Param.SEARCH),
-                call.getParameter(Param.OFFSET)?.toIntOrNull(),
-                call.getParameter(Param.LIMIT)?.toIntOrNull()
-            ).response()
-        )
-    }
+  route(ProfilerRoute.VIEWERS) {
+    val result = getViewersUseCase.invoke(
+      GetViewersAction(
+        call.requireTokenData().id,
+        call.getParameter(Param.SEARCH),
+        call.getParameter(Param.OFFSET)?.toIntOrNull(),
+        call.getParameter(Param.LIMIT)?.toIntOrNull()
+      )
+    )
+    call.respond(result.viewers.response())
+  }
 
-    route(Routes.VIEWERS_BY_ID) {
-        val userId = call.requireParameter(Param.USER_ID).toInt()
-        call.respond(
-            getViewersByIdUseCase.getViewers(
-                userId,
-                call.getUserIdPrincipal()?.name,
-                call.getParameter(Param.SEARCH),
-                call.getParameter(Param.OFFSET)?.toIntOrNull(),
-                call.getParameter(Param.LIMIT)?.toIntOrNull()
-            ).response()
-        )
-    }
+  route(ProfilerRoute.VIEWERS_BY_ID) {
+    val userId = call.requireParameter(Param.USER_ID).toInt()
+    val result = getViewersByIdUseCase.invoke(
+      GetViewersByIdAction(
+        id = userId,
+        requesterId = call.requireTokenData().id,
+        search = call.getParameter(Param.SEARCH),
+        offset = call.getParameter(Param.OFFSET)?.toIntOrNull(),
+        limit = call.getParameter(Param.LIMIT)?.toIntOrNull()
+      )
+    )
+    call.respond(result.viewers.response())
+  }
 
-    route(Routes.DELETE_VIEWERS) {
-        val userId = call.requireParameter(Param.USER_ID).toInt()
-        call.respond(deleteViewersUseCase.deleteViewers(userId, call.getUserIdPrincipal()?.name))
-    }
+  route(ProfilerRoute.DELETE_VIEWERS) {
+    val userId = call.requireParameter(Param.USER_ID).toInt()
+    val result = deleteViewersUseCase.invoke(
+      DeleteViewersAction(userId, call.requireTokenData().id)
+    )
+    call.respond(result.isDeleted.response())
+  }
 
-    route(Routes.DELETE_VIEWERS_BY_ID) {
-        val userId = call.requireParameter(Param.USER_ID).toInt()
-        val viewerId = call.requireParameter(Param.VIEWER_ID).toInt()
-        call.respond(
-            deleteViewersByIdUseCase.deleteViewers(
-                userId,
-                viewerId,
-                call.getUserIdPrincipal()?.name
-            ).response()
-        )
-    }
+  route(ProfilerRoute.DELETE_VIEWERS_BY_ID) {
+    val result = deleteViewersByIdUseCase.invoke(
+      DeleteViewersByIdAction(
+        userId = call.requireParameter(Param.USER_ID).toInt(),
+        viewerId = call.requireParameter(Param.VIEWER_ID).toInt(),
+        requesterId = call.requireTokenData().id
+      )
+    )
+    call.respond(result.isDeleted.response())
+  }
 }

@@ -1,7 +1,7 @@
 package com.heavyforheavy.profiler.data.entity
 
 import com.heavyforheavy.profiler.data.tables.ServiceInfos
-import com.heavyforheavy.profiler.model.ServiceInfo
+import com.heavyforheavy.profiler.infrastructure.model.ServiceInfo
 import org.jetbrains.exposed.sql.ResultRow
 
 

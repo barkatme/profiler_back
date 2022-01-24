@@ -7,8 +7,8 @@ import com.heavyforheavy.profiler.data.tables.ServiceInfos
 import com.heavyforheavy.profiler.data.tables.UserServices
 import com.heavyforheavy.profiler.data.tables.Users
 import com.heavyforheavy.profiler.domain.repository.UserServiceRepository
-import com.heavyforheavy.profiler.model.UserService
-import com.heavyforheavy.profiler.model.exception.DatabaseException
+import com.heavyforheavy.profiler.infrastructure.model.UserService
+import com.heavyforheavy.profiler.infrastructure.model.exception.DatabaseException
 import org.jetbrains.exposed.sql.*
 
 class HerokuUserServiceRepository : UserServiceRepository {

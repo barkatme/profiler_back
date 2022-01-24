@@ -1,6 +1,6 @@
 package com.heavyforheavy.profiler.domain.repository
 
-import com.heavyforheavy.profiler.model.UserService
+import com.heavyforheavy.profiler.infrastructure.model.UserService
 
 interface UserServiceRepository {
   suspend fun getById(id: Int): UserService?

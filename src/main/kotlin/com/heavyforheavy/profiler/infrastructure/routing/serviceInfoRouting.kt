@@ -1,16 +1,13 @@
 package com.heavyforheavy.profiler.infrastructure.routing
 
 import com.heavyforheavy.profiler.domain.usecase.serviceinfo.*
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincipal
-import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.route
-import com.heavyforheavy.profiler.mappers.response
-import com.heavyforheavy.profiler.model.ServiceInfo
-import com.heavyforheavy.profiler.model.exception.AuthException
-import com.heavyforheavy.profiler.model.exception.ServiceInfoException
-import com.heavyforheavy.profiler.model.response
-import com.heavyforheavy.profiler.routes.Param
-import com.heavyforheavy.profiler.routes.Routes
+import com.heavyforheavy.profiler.infrastructure.model.ServiceInfo
+import com.heavyforheavy.profiler.infrastructure.model.response
+import com.heavyforheavy.profiler.infrastructure.routing.models.Param
+import com.heavyforheavy.profiler.infrastructure.routing.models.ProfilerRoute
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireTokenData
+import com.heavyforheavy.profiler.infrastructure.routing.utils.route
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -24,45 +21,48 @@ fun Routing.serviceInfoRouting() {
   val addServiceInfoUseCase: AddServiceInfoUseCase = get()
   val updateServiceInfoUseCase: UpdateServiceInfoUseCase = get()
   val deleteServiceInfoUseCase: DeleteServiceInfoUseCase = get()
-  val deleteServiceInfoByIdUseCase: DeleteServiceInfoByIdUseCase = get()
 
-  route(Routes.SERVICES_INFO) {
-    call.respond(getAllServiceInfoUseCase.getServiceInfos().response())
+  route(ProfilerRoute.SERVICES_INFO) {
+    call.respond(getAllServiceInfoUseCase.invoke(GetAllServiceInfoAction).serviceInfos.response())
   }
 
-  route(Routes.SERVICE_INFO) {
+  route(ProfilerRoute.SERVICE_INFO) {
     val serviceId = call.requireParameter(Param.SERVICE_ID).toInt()
     call.respond(
-      getServiceInfoUseCase.getServiceInfo(serviceId)?.response()
-        ?: throw ServiceInfoException.ServiceInfoNotFound()
+      getServiceInfoUseCase.invoke(GetServiceInfoAction(serviceId)).serviceInfo.response()
     )
   }
 
-  route(Routes.ADD_SERVICE_INFO) {
+  route(ProfilerRoute.ADD_SERVICE_INFO) {
     val serviceInfo = call.receive<ServiceInfo>()
-    call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(addServiceInfoUseCase.addServiceInfo(email, serviceInfo).response())
-    } ?: AuthException.InvalidToken()
+    val action = AddServiceAction(call.requireTokenData().id, serviceInfo)
+    call.respond(addServiceInfoUseCase.invoke(action).serviceInfo.response())
   }
 
-  route(Routes.UPDATE_SERVICE_INFO) {
+  route(ProfilerRoute.UPDATE_SERVICE_INFO) {
     val serviceInfo = call.receive<ServiceInfo>()
-    call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(updateServiceInfoUseCase.updateServiceInfo(email, serviceInfo).response())
-    } ?: AuthException.InvalidToken()
+    call.respond(
+      updateServiceInfoUseCase.invoke(
+        UpdateServiceInfoAction(call.requireTokenData().id, serviceInfo)
+      ).serviceInfo.response()
+    )
   }
 
-  route(Routes.DELETE_SERVICE_INFO) {
+  route(ProfilerRoute.DELETE_SERVICE_INFO) {
     val serviceInfo = call.receive<ServiceInfo>()
-    call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(deleteServiceInfoUseCase.deleteServiceInfo(email, serviceInfo).response())
-    } ?: AuthException.InvalidToken()
+    call.respond(
+      deleteServiceInfoUseCase.invoke(
+        DeleteServiceInfoAction(call.requireTokenData().id, serviceInfo.id)
+      ).isDeleted.response()
+    )
   }
 
-  route(Routes.DELETE_SERVICE_INFO_BY_ID) {
+  route(ProfilerRoute.DELETE_SERVICE_INFO_BY_ID) {
     val serviceId = call.requireParameter(Param.SERVICE_ID).toInt()
-    call.getUserIdPrincipal()?.name?.let { email ->
-      call.respond(deleteServiceInfoByIdUseCase.deleteServiceInfo(email, serviceId).response())
-    } ?: AuthException.InvalidToken()
+    call.respond(
+      deleteServiceInfoUseCase.invoke(
+        DeleteServiceInfoAction(call.requireTokenData().id, serviceId)
+      ).isDeleted.response()
+    )
   }
 }

@@ -7,6 +7,8 @@ import com.heavyforheavy.profiler.data.tables.SavedUsers
 import com.heavyforheavy.profiler.data.tables.Users
 import com.heavyforheavy.profiler.data.tables.ViewedUsers
 import com.heavyforheavy.profiler.domain.repository.UserRelationRepository
+import com.heavyforheavy.profiler.infrastructure.model.SavedUserResult
+import com.heavyforheavy.profiler.infrastructure.model.ViewerResult
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.like
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.regexp
@@ -35,7 +37,7 @@ class HerokuUserRelationRepository : UserRelationRepository {
     search: String?,
     offset: Int?,
     limit: Int?
-  ): List<UserRelationRepository.ViewerResult> = dbQuery {
+  ): List<ViewerResult> = dbQuery {
     val query = (ViewedUsers.leftJoin(Users, { ViewedUsers.userId }, { id })).slice(
       ViewedUsers.lastTime,
       Users.id,
@@ -55,7 +57,7 @@ class HerokuUserRelationRepository : UserRelationRepository {
     search?.let { query.adjustWhere { Users.first_name.regexp(it) or Users.last_name.regexp(it) } }
     query.limitAndOffset(limit, offset)
     query.map {
-      UserRelationRepository.ViewerResult(
+      ViewerResult(
         it.asUser(),
         it[ViewedUsers.lastTime].toString()
       )
@@ -83,7 +85,7 @@ class HerokuUserRelationRepository : UserRelationRepository {
     search: String?,
     offset: Int?,
     limit: Int?
-  ): List<UserRelationRepository.SavedUserResult> = dbQuery {
+  ): List<SavedUserResult> = dbQuery {
     val query = (SavedUsers.leftJoin(Users, { savedUserId }, { id })).slice(
       SavedUsers.createdAt,
       Users.id,
@@ -104,7 +106,7 @@ class HerokuUserRelationRepository : UserRelationRepository {
     search?.let { query.adjustWhere { Users.first_name.like("%$it%") or Users.last_name.like("%$it%") } }
     query.limitAndOffset(limit, offset)
     query.map {
-      UserRelationRepository.SavedUserResult(
+      SavedUserResult(
         it.asUser(),
         it[SavedUsers.createdAt].toString()
       )

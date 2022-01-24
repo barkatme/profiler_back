@@ -1,14 +1,13 @@
 package com.heavyforheavy.profiler.infrastructure.routing
 
 import com.heavyforheavy.profiler.domain.usecase.userservices.*
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincipal
-import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.route
-import com.heavyforheavy.profiler.mappers.response
-import com.heavyforheavy.profiler.model.UserService
-import com.heavyforheavy.profiler.model.response
-import com.heavyforheavy.profiler.routes.Param
-import com.heavyforheavy.profiler.routes.Routes
+import com.heavyforheavy.profiler.infrastructure.model.UserService
+import com.heavyforheavy.profiler.infrastructure.model.response
+import com.heavyforheavy.profiler.infrastructure.routing.models.Param
+import com.heavyforheavy.profiler.infrastructure.routing.models.ProfilerRoute
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireTokenData
+import com.heavyforheavy.profiler.infrastructure.routing.utils.route
 import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -23,43 +22,51 @@ fun Routing.userServicesRouting() {
   val getServicesUseCase: GetServicesUseCase = get()
   val getUserAndServicesUseCase: GetUserAndServicesUseCase = get()
 
-  route(Routes.USER_AND_SERVICES) {
-    call.respond(getUserAndServicesUseCase.getServices(call.getUserIdPrincipal()?.name).response())
-  }
-
-  route(Routes.USER_AND_SERVICES_BY_ID) {
-    call.respond(
-      getUserAndServicesUseCase.getServices(call.requireParameter(Param.USER_ID).toInt()).response()
+  route(ProfilerRoute.USER_AND_SERVICES) {
+    val result = getUserAndServicesUseCase.invoke(
+      GetUserAndServicesAction(call.requireTokenData().id)
     )
+    call.respond(result.userAndServices.response())
   }
 
-  route(Routes.USER_SERVICES) {
-    call.respond(getServicesUseCase.getServices(call.getUserIdPrincipal()?.name).response())
-  }
-
-  route(Routes.USER_SERVICES_BY_ID) {
-    call.respond(
-      getServicesUseCase.getServices(call.requireParameter(Param.USER_ID).toInt()).response()
+  route(ProfilerRoute.USER_AND_SERVICES_BY_ID) {
+    val result = getUserAndServicesUseCase.invoke(
+      GetUserAndServicesAction(call.requireParameter(Param.USER_ID).toInt())
     )
+    call.respond(result.userAndServices.response())
   }
 
-  route(Routes.ADD_SERVICE) {
+  route(ProfilerRoute.USER_SERVICES) {
+    val result = getServicesUseCase.invoke(GetServicesAction(call.requireTokenData().id))
+    call.respond(result.services.response())
+  }
+
+  route(ProfilerRoute.USER_SERVICES_BY_ID) {
+    val result = getServicesUseCase.invoke(
+      GetServicesAction(call.requireParameter(Param.USER_ID).toInt())
+    )
+    call.respond(result.services.response())
+  }
+
+  route(ProfilerRoute.ADD_SERVICE) {
     val service = call.receive<UserService>()
-    call.respond(addServiceUseCase.addService(call.getUserIdPrincipal()?.name, service).response())
+    val result = addServiceUseCase.invoke(AddServiceAction(call.requireTokenData().id, service))
+    call.respond(result.addedService.response())
   }
 
-  route(Routes.UPDATE_SERVICE) {
+  route(ProfilerRoute.UPDATE_SERVICE) {
     val service = call.receive<UserService>()
-    call.respond(
-      updateServiceUseCase.updateService(call.getUserIdPrincipal()?.name, service).response()
-    )
+    val result =
+      updateServiceUseCase.invoke(UpdateServiceAction(call.requireTokenData().id, service))
+    call.respond(result.userService.response())
   }
 
-  route(Routes.DELETE_SERVICE) {
+  route(ProfilerRoute.DELETE_SERVICE) {
     call.respond(
-      deleteServiceUseCase.deleteService(
-        call.requireParameter(Param.SERVICE_ID).toInt()
-      ).response()
+      deleteServiceUseCase
+        .invoke(DeleteServiceAction(call.requireParameter(Param.SERVICE_ID).toInt()))
+        .isDeleted
+        .response()
     )
   }
 }

@@ -1,10 +1,11 @@
 package com.heavyforheavy.profiler.domain.usecase
 
+import com.heavyforheavy.profiler.domain.TokenManager
 import com.heavyforheavy.profiler.domain.usecase.auth.SignInUseCase
 import com.heavyforheavy.profiler.domain.usecase.auth.SignOutUseCase
 import com.heavyforheavy.profiler.domain.usecase.auth.SignUpUseCase
 import com.heavyforheavy.profiler.domain.usecase.role.GetRolePermissionsUseCase
-import com.heavyforheavy.profiler.domain.usecase.role.GetUserRolePermissionsUseCase
+import com.heavyforheavy.profiler.domain.usecase.role.GetUserPermissionsUseCase
 import com.heavyforheavy.profiler.domain.usecase.saveuser.DeleteSavedUserUseCase
 import com.heavyforheavy.profiler.domain.usecase.saveuser.GetSavedUsersUseCase
 import com.heavyforheavy.profiler.domain.usecase.saveuser.SaveUserUseCase
@@ -24,46 +25,46 @@ import org.koin.dsl.module
 val useCasesModule = module {
 
   //auth
-  single { SignInUseCase(get()) }
-  single { SignUpUseCase(get()) }
-  single { SignOutUseCase(get()) }
+  single { TokenManager(get()) }
+  factory { SignInUseCase(get(), get()) }
+  factory { SignUpUseCase(get(), get()) }
+  factory { SignOutUseCase(get(), get()) }
 
   //user
-  single { GetUserByEmailUseCase(get()) }
-  single { GetOtherUserUseCase(get(), get()) }
-  single { GetUserByTokenUseCase(get()) }
-  single { UpdateUserUseCase(get()) }
+  factory { GetUserByEmailUseCase(get()) }
+  factory { GetOtherUserUseCase(get(), get()) }
+  factory { GetUserByTokenUseCase(get()) }
+  factory { UpdateUserUseCase(get()) }
 
   //rolePermissions
-  single { GetUserRolePermissionsUseCase(get(), get()) }
-  single { GetRolePermissionsUseCase(get()) }
+  factory { GetUserPermissionsUseCase(get(), get()) }
+  factory { GetRolePermissionsUseCase(get()) }
 
   //viewers
-  single { GetViewersUseCase(get(), get()) }
-  single { GetViewersByIdUseCase(get(), get(), get(), get()) }
-  single { DeleteViewersByIdUseCase(get(), get(), get(), get()) }
-  single { DeleteViewersUseCase(get(), get(), get(), get()) }
+  factory { GetViewersUseCase(get()) }
+  factory { GetViewersByIdUseCase(get(), get(), get(), get()) }
+  factory { DeleteViewersByIdUseCase(get(), get(), get(), get()) }
+  factory { DeleteViewersUseCase(get(), get(), get(), get()) }
 
   //serviceInfos
-  single { GetServiceInfoUseCase(get()) }
-  single { GetAllServiceInfoUseCase(get()) }
-  single { AddServiceInfoUseCase(get(), get(), get(), get()) }
-  single { UpdateServiceInfoUseCase(get(), get(), get(), get()) }
-  single { DeleteServiceInfoUseCase(get(), get(), get(), get()) }
-  single { DeleteServiceInfoByIdUseCase(get(), get(), get(), get()) }
+  factory { GetServiceInfoUseCase(get()) }
+  factory { GetAllServiceInfoUseCase(get()) }
+  factory { AddServiceInfoUseCase(get(), get(), get(), get()) }
+  factory { UpdateServiceInfoUseCase(get(), get(), get(), get()) }
+  factory { DeleteServiceInfoUseCase(get(), get(), get(), get()) }
 
   //save user
-  single { SaveUserUseCase(get(), get()) }
-  single { GetSavedUsersUseCase(get(), get()) }
-  single { DeleteSavedUserUseCase(get(), get()) }
+  factory { SaveUserUseCase(get(), get()) }
+  factory { GetSavedUsersUseCase(get()) }
+  factory { DeleteSavedUserUseCase(get(), get()) }
 
   //user services
-  single { AddServiceUseCase(get(), get()) }
-  single { GetServicesUseCase(get(), get()) }
-  single { GetUserAndServicesUseCase(get(), get()) }
-  single { UpdateServiceUseCase(get(), get()) }
-  single { DeleteServiceUseCase(get()) }
+  factory { AddServiceUseCase(get()) }
+  factory { GetServicesUseCase(get()) }
+  factory { GetUserAndServicesUseCase(get(), get()) }
+  factory { UpdateServiceUseCase(get(), get()) }
+  factory { DeleteServiceUseCase(get()) }
 
   //others (admin/additional info requests)
-  single { GetUserRoleListUseCase(get()) }
+  factory { GetUserRoleListUseCase(get()) }
 }

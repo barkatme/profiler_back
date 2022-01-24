@@ -6,8 +6,8 @@ import com.heavyforheavy.profiler.data.entity.asPermissionEntity
 import com.heavyforheavy.profiler.data.tables.Permissions
 import com.heavyforheavy.profiler.data.tables.UrlPermissions
 import com.heavyforheavy.profiler.domain.repository.PermissionRepository
-import com.heavyforheavy.profiler.model.Permission
-import com.heavyforheavy.profiler.model.exception.DatabaseException
+import com.heavyforheavy.profiler.infrastructure.model.Permission
+import com.heavyforheavy.profiler.infrastructure.model.exception.DatabaseException
 import org.jetbrains.exposed.sql.*
 
 class HerokuPermissionRepository : PermissionRepository {
@@ -32,6 +32,14 @@ class HerokuPermissionRepository : PermissionRepository {
       (UrlPermissions.url eq url) and (UrlPermissions.permissionId eq Permissions.id)
     }
       .mapNotNull { it.asPermission() }
+  }
+
+  override suspend fun addUrlPermission(url: String, permission: Permission): Int = dbQuery {
+    TODO("Not yet implemented")
+  }
+
+  override suspend fun deleteUrlPermission(url: String, permission: Permission): Int {
+    TODO("Not yet implemented")
   }
 
   override suspend fun insert(permission: Permission): Permission = dbQuery {

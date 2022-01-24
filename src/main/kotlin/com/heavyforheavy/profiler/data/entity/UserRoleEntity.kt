@@ -1,7 +1,7 @@
 package com.heavyforheavy.profiler.data.entity
 
 import com.heavyforheavy.profiler.data.tables.UserRoles
-import com.heavyforheavy.profiler.model.Role
+import com.heavyforheavy.profiler.infrastructure.model.Role
 import org.jetbrains.exposed.sql.ResultRow
 
 

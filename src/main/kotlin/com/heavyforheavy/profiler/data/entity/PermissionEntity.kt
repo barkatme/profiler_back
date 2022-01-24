@@ -1,7 +1,7 @@
 package com.heavyforheavy.profiler.data.entity
 
 import com.heavyforheavy.profiler.data.tables.Permissions
-import com.heavyforheavy.profiler.model.Permission
+import com.heavyforheavy.profiler.infrastructure.model.Permission
 import org.jetbrains.exposed.sql.ResultRow
 
 

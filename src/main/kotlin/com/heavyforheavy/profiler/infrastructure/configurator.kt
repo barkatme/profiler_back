@@ -2,11 +2,11 @@ package com.heavyforheavy.profiler.infrastructure
 
 import com.heavyforheavy.profiler.data.dataModule
 import com.heavyforheavy.profiler.domain.usecase.useCasesModule
-import com.heavyforheavy.profiler.infrastructure.modules.authModule
-import com.heavyforheavy.profiler.infrastructure.modules.errorHandlerModule
-import com.heavyforheavy.profiler.infrastructure.modules.serializationModule
-import com.heavyforheavy.profiler.infrastructure.modules.supportModule
 import com.heavyforheavy.profiler.infrastructure.routing.*
+import com.heavyforheavy.profiler.infrastructure.setup.authModule
+import com.heavyforheavy.profiler.infrastructure.setup.errorHandlerModule
+import com.heavyforheavy.profiler.infrastructure.setup.serializationModule
+import com.heavyforheavy.profiler.infrastructure.setup.supportModule
 import io.ktor.application.*
 import io.ktor.http.content.*
 import io.ktor.locations.*
@@ -15,39 +15,39 @@ import org.koin.ktor.ext.Koin
 import org.koin.logger.slf4jLogger
 
 
-fun Application.configurator(@Suppress("UNUSED_PARAMETER") testing: Boolean = false) {
+fun Application.configurator(testing: Boolean = false) {
 
-    install(Koin) {
-        //TODO set log level to deafult when koin will work fine with java version
-        slf4jLogger(level = org.koin.core.logger.Level.ERROR)
-        modules(dataModule, infrastructureModule, useCasesModule)
-    }
+  install(Koin) {
+    //TODO set log level to deafult when koin will work fine with java version
+    slf4jLogger(level = org.koin.core.logger.Level.ERROR)
+    modules(dataModule, infrastructureModule, useCasesModule)
+  }
 
-    supportModule()
-    serializationModule()
-    authModule()
-    errorHandlerModule()
-    install(Locations) {
-    }
+  supportModule(testing)
+  serializationModule(testing)
+  authModule(testing)
+  errorHandlerModule(testing)
+  install(Locations) {
+  }
 
-    allRouting()
+  addAllRoutes(testing)
 }
 
-private fun Application.allRouting() {
-    //Auth routings are located at authModule
-    routing {
-        homeRouting()
+private fun Application.addAllRoutes(@Suppress("UNUSED_PARAMETER") testing: Boolean = false) {
+  routing {
+    homeRouting()
 
-        usersRouting()
-        viewedUsersRouting()
-        saveUserRoting()
-        serviceInfoRouting()
-        roleRouting()
+    authRouting()
+    usersRouting()
+    viewedUsersRouting()
+    saveUserRoting()
+    serviceInfoRouting()
+    roleRouting()
 
-        userServicesRouting()
+    userServicesRouting()
 
-        static("/static") {
-            resources("static")
-        }
+    static("/static") {
+      resources("static")
     }
+  }
 }

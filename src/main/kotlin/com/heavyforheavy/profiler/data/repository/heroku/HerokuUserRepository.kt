@@ -5,8 +5,8 @@ import com.heavyforheavy.profiler.data.entity.asUser
 import com.heavyforheavy.profiler.data.entity.asUserEntity
 import com.heavyforheavy.profiler.data.tables.Users
 import com.heavyforheavy.profiler.domain.repository.UserRepository
-import com.heavyforheavy.profiler.model.User
-import com.heavyforheavy.profiler.model.exception.DatabaseException
+import com.heavyforheavy.profiler.infrastructure.model.User
+import com.heavyforheavy.profiler.infrastructure.model.exception.DatabaseException
 import org.jetbrains.exposed.sql.*
 
 
@@ -26,7 +26,7 @@ class HerokuUserRepository : UserRepository {
 
   override suspend fun insert(user: User): User = dbQuery {
     Users.insert { table ->
-      user.email?.also { table[email] = it }
+      user.email.also { table[email] = it }
       user.passwordHash?.also { table[passwordHash] = it }
       table[login] = user.login
       table[about] = user.about
@@ -41,7 +41,7 @@ class HerokuUserRepository : UserRepository {
     val entity = user.asUserEntity()
     dbQuery {
       Users.update(where = { Users.id eq user.id }) { table ->
-        entity.email?.let { table[email] = it }
+        entity.email.let { table[email] = it }
         entity.passwordHash?.let { table[passwordHash] = it }
         table[login] = entity.login
         table[about] = entity.about

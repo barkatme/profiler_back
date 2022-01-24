@@ -2,8 +2,8 @@ package com.heavyforheavy.profiler.data.entity
 
 import com.heavyforheavy.profiler.data.tables.ServiceInfos
 import com.heavyforheavy.profiler.data.tables.UserServices
-import com.heavyforheavy.profiler.model.ServiceInfo
-import com.heavyforheavy.profiler.model.UserService
+import com.heavyforheavy.profiler.infrastructure.model.ServiceInfo
+import com.heavyforheavy.profiler.infrastructure.model.UserService
 import org.jetbrains.exposed.sql.ResultRow
 
 data class UserServiceEntity(

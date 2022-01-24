@@ -1,14 +1,15 @@
 package com.heavyforheavy.profiler.infrastructure.routing
 
+import com.heavyforheavy.profiler.domain.usecase.role.GetRolePermissionsAction
 import com.heavyforheavy.profiler.domain.usecase.role.GetRolePermissionsUseCase
-import com.heavyforheavy.profiler.domain.usecase.role.GetUserRolePermissionsUseCase
-import com.heavyforheavy.profiler.infrastructure.routing.routes.getUserIdPrincipal
-import com.heavyforheavy.profiler.infrastructure.routing.routes.requireParameter
-import com.heavyforheavy.profiler.infrastructure.routing.routes.route
-import com.heavyforheavy.profiler.mappers.response
-import com.heavyforheavy.profiler.model.exception.AuthException
-import com.heavyforheavy.profiler.routes.Param
-import com.heavyforheavy.profiler.routes.Routes
+import com.heavyforheavy.profiler.domain.usecase.role.GetUserPermissionsAction
+import com.heavyforheavy.profiler.domain.usecase.role.GetUserPermissionsUseCase
+import com.heavyforheavy.profiler.infrastructure.model.response
+import com.heavyforheavy.profiler.infrastructure.routing.models.Param
+import com.heavyforheavy.profiler.infrastructure.routing.models.ProfilerRoute
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireParameter
+import com.heavyforheavy.profiler.infrastructure.routing.utils.requireTokenData
+import com.heavyforheavy.profiler.infrastructure.routing.utils.route
 import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -17,19 +18,20 @@ import org.koin.ktor.ext.get
 
 fun Routing.roleRouting() {
 
-  val getUserRolePermissionsUseCase: GetUserRolePermissionsUseCase = get()
-  val getRolePermissionsUseCase: GetRolePermissionsUseCase = get()
+  val userPermissionsUseCase: GetUserPermissionsUseCase = get()
+  val rolePermissionsUseCase: GetRolePermissionsUseCase = get()
 
-  route(Routes.ROLE_PERMISSIONS) {
-    call.respond(
-      call.getUserIdPrincipal()?.name?.let { email ->
-        getUserRolePermissionsUseCase.getUserPermissions(email).response()
-      } ?: throw AuthException.InvalidToken()
-    )
+  route(ProfilerRoute.ROLE_PERMISSIONS) {
+    val tokenData = call.requireTokenData()
+    val action = GetUserPermissionsAction(tokenData.email)
+    call.respond(userPermissionsUseCase.invoke(action).permissions.response())
+
   }
 
-  route(Routes.ROLE_PERMISSIONS_BY_ID) {
+  route(ProfilerRoute.ROLE_PERMISSIONS_BY_ID) {
     val roleId = call.requireParameter(Param.ROLE_ID).toInt()
-    call.respond(getRolePermissionsUseCase.getUserPermissions(roleId).response())
+    val action = GetRolePermissionsAction(roleId)
+    val result = rolePermissionsUseCase.invoke(action)
+    call.respond(result.permissions.response())
   }
 }

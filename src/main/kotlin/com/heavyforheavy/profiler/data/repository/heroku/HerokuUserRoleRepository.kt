@@ -9,9 +9,9 @@ import com.heavyforheavy.profiler.data.tables.Permissions
 import com.heavyforheavy.profiler.data.tables.UserRolePermissions
 import com.heavyforheavy.profiler.data.tables.UserRoles
 import com.heavyforheavy.profiler.domain.repository.RoleRepository
-import com.heavyforheavy.profiler.model.Permission
-import com.heavyforheavy.profiler.model.Role
-import com.heavyforheavy.profiler.model.exception.DatabaseException
+import com.heavyforheavy.profiler.infrastructure.model.Permission
+import com.heavyforheavy.profiler.infrastructure.model.Role
+import com.heavyforheavy.profiler.infrastructure.model.exception.DatabaseException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.*

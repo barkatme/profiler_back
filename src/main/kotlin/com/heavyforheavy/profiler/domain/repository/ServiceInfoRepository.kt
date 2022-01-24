@@ -1,6 +1,6 @@
 package com.heavyforheavy.profiler.domain.repository
 
-import com.heavyforheavy.profiler.model.ServiceInfo
+import com.heavyforheavy.profiler.infrastructure.model.ServiceInfo
 
 interface ServiceInfoRepository {
 

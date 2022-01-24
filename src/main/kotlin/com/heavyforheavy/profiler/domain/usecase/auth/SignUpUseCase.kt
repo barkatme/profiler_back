@@ -1,22 +1,43 @@
 package com.heavyforheavy.profiler.domain.usecase.auth
 
+import com.heavyforheavy.profiler.domain.TokenManager
 import com.heavyforheavy.profiler.domain.repository.UserRepository
-import com.heavyforheavy.profiler.model.User
-import com.heavyforheavy.profiler.model.exception.AuthException
+import com.heavyforheavy.profiler.domain.usecase.Action
+import com.heavyforheavy.profiler.domain.usecase.Result
+import com.heavyforheavy.profiler.domain.usecase.UseCase
+import com.heavyforheavy.profiler.infrastructure.model.Token
+import com.heavyforheavy.profiler.infrastructure.model.User
+import com.heavyforheavy.profiler.infrastructure.model.exception.AuthException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 
-class SignUpUseCase(private val userRepository: UserRepository) {
+class SignUpUseCase(
+  private val userRepository: UserRepository,
+  private val tokenManager: TokenManager
+) : UseCase<SignUpAction, SignUpResult> {
 
-  suspend fun signUp(user: User, tokenGenerator: (User) -> String): User =
+  override suspend fun invoke(action: SignUpAction): SignUpResult =
     withContext(Dispatchers.IO) {
-      user.token = tokenGenerator(user)
+      val user = User(
+        email = action.credentials.email,
+        passwordHash = action.credentials.password
+      )
+      val newToken = tokenManager.createToken(user)
+      user.token = newToken.token
+
       try {
         userRepository.insert(user)
       } catch (e: ExposedSQLException) {
+        //TODO: throw repository exceptions from within the repository
         throw AuthException.EmailAlreadyExists()
       }
-      return@withContext user
+
+      return@withContext SignUpResult(newToken)
     }
 }
+
+data class SignUpAction(val credentials: com.heavyforheavy.profiler.infrastructure.model.Credentials) :
+  Action
+
+data class SignUpResult(val token: Token) : Result
