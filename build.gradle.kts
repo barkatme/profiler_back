@@ -25,6 +25,8 @@ dependencies {
   implementation("io.micrometer:micrometer-registry-prometheus:1.8.1")
   implementation("ch.qos.logback:logback-classic:1.2.10")
 
+  implementation("org.apache.commons:commons-email:1.5")
+
   //ktorDependencies
   implementation("io.ktor:ktor-client-core:$ktor")
   implementation("io.ktor:ktor-gson:$ktor")

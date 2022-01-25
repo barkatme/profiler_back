@@ -4,16 +4,14 @@ import com.heavyforheavy.profiler.domain.TokenManager
 import com.heavyforheavy.profiler.domain.usecase.auth.SignInUseCase
 import com.heavyforheavy.profiler.domain.usecase.auth.SignOutUseCase
 import com.heavyforheavy.profiler.domain.usecase.auth.SignUpUseCase
+import com.heavyforheavy.profiler.domain.usecase.email.SendEmailUseCase
 import com.heavyforheavy.profiler.domain.usecase.role.GetRolePermissionsUseCase
 import com.heavyforheavy.profiler.domain.usecase.role.GetUserPermissionsUseCase
 import com.heavyforheavy.profiler.domain.usecase.saveuser.DeleteSavedUserUseCase
 import com.heavyforheavy.profiler.domain.usecase.saveuser.GetSavedUsersUseCase
 import com.heavyforheavy.profiler.domain.usecase.saveuser.SaveUserUseCase
 import com.heavyforheavy.profiler.domain.usecase.serviceinfo.*
-import com.heavyforheavy.profiler.domain.usecase.user.GetOtherUserUseCase
-import com.heavyforheavy.profiler.domain.usecase.user.GetUserByEmailUseCase
-import com.heavyforheavy.profiler.domain.usecase.user.GetUserByTokenUseCase
-import com.heavyforheavy.profiler.domain.usecase.user.UpdateUserUseCase
+import com.heavyforheavy.profiler.domain.usecase.user.*
 import com.heavyforheavy.profiler.domain.usecase.userrole.GetUserRoleListUseCase
 import com.heavyforheavy.profiler.domain.usecase.userservices.*
 import com.heavyforheavy.profiler.domain.usecase.viewers.DeleteViewersByIdUseCase
@@ -30,11 +28,15 @@ val useCasesModule = module {
   factory { SignUpUseCase(get(), get()) }
   factory { SignOutUseCase(get(), get()) }
 
+  factory { SendEmailUseCase() }
+
   //user
+  factory { GetUserUseCase(get()) }
   factory { GetUserByEmailUseCase(get()) }
   factory { GetOtherUserUseCase(get(), get()) }
   factory { GetUserByTokenUseCase(get()) }
   factory { UpdateUserUseCase(get()) }
+  factory { UpdateUserPasswordUseCase(get(), get()) }
 
   //rolePermissions
   factory { GetUserPermissionsUseCase(get(), get()) }

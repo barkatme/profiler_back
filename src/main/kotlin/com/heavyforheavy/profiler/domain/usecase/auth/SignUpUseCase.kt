@@ -19,21 +19,23 @@ class SignUpUseCase(
 
   override suspend fun invoke(action: SignUpAction): SignUpResult =
     withContext(Dispatchers.IO) {
-      val user = User(
-        email = action.credentials.email,
-        passwordHash = action.credentials.password
-      )
-      val newToken = tokenManager.createToken(user)
-      user.token = newToken.token
-
       try {
-        userRepository.insert(user)
+        val user = User(
+          email = action.credentials.email,
+          passwordHash = action.credentials.password
+        )
+
+        val insertedUser = userRepository.insert(user)
+        val newToken = tokenManager.createToken(insertedUser)
+        insertedUser.token = newToken.token
+
+        userRepository.update(insertedUser)
+
+        return@withContext SignUpResult(newToken)
       } catch (e: ExposedSQLException) {
         //TODO: throw repository exceptions from within the repository
         throw AuthException.EmailAlreadyExists()
       }
-
-      return@withContext SignUpResult(newToken)
     }
 }
 

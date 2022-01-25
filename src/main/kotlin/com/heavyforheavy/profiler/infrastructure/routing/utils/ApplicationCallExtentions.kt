@@ -30,3 +30,6 @@ fun ApplicationCall.getParameter(param: Param): String? = parameters[param.key]
 
 fun ApplicationCall.requireParameter(param: Param): String =
   getParameter(param) ?: throw RequestException.ParameterNotFound(param)
+
+fun ApplicationCall.requireQueryParameter(param: Param): String =
+  request.queryParameters[param.key]!!

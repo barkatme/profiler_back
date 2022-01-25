@@ -8,6 +8,11 @@ enum class Param(val key: String) {
   OFFSET("offset"),
   LIMIT("limit"),
   SEARCH("search"),
+
+  EMAIL("email"),
+  CODE("code"),
+  NEW_PASSWORD("newPassword"),
+
   URL("URL");
 
   override fun toString(): String = key

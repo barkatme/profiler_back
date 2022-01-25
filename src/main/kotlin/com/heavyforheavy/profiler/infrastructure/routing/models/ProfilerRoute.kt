@@ -12,6 +12,8 @@ enum class ProfilerRoute(
   AUTH_SIGN_IN("auth/sign_in", HttpMethod.Post),
   AUTH_SIGN_UP("auth/sign_up", HttpMethod.Post),
   AUTH_SIGN_OUT("auth/sign_out", HttpMethod.Get, requireAuth = true),
+  AUTH_FORGOT_PASSWORD("auth/forgot_password/{${Param.EMAIL}}", HttpMethod.Get),
+  AUTH_RESTORE_PASSWORD("auth/restore_password", HttpMethod.Get),
 
   //user
   USER("user", requireAuth = true),
