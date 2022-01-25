@@ -34,7 +34,6 @@ val useCasesModule = module {
   factory { GetUserUseCase(get()) }
   factory { GetUserByEmailUseCase(get()) }
   factory { GetOtherUserUseCase(get(), get()) }
-  factory { GetUserByTokenUseCase(get()) }
   factory { UpdateUserUseCase(get()) }
   factory { UpdateUserPasswordUseCase(get(), get()) }
 

@@ -18,12 +18,12 @@ import org.koin.ktor.ext.get
 fun Routing.usersRouting() {
 
   val getOtherUserUseCase: GetOtherUserUseCase = get()
-  val getUserByTokenUseCase: GetUserByTokenUseCase = get()
+  val getUserByTokenUseCase: GetUserUseCase = get()
   val updateUserUseCase: UpdateUserUseCase = get()
 
   route(ProfilerRoute.USER) {
-    val user = getUserByTokenUseCase.getUser(call.requireTokenData().token)
-    call.respond(user.response())
+    val result = getUserByTokenUseCase.invoke(GetUserAction(call.requireTokenData().id))
+    call.respond(result.user.response())
   }
 
   route(ProfilerRoute.UPDATE_USER) {
