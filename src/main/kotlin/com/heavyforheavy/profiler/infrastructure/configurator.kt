@@ -7,18 +7,18 @@ import com.heavyforheavy.profiler.infrastructure.setup.authModule
 import com.heavyforheavy.profiler.infrastructure.setup.errorHandlerModule
 import com.heavyforheavy.profiler.infrastructure.setup.serializationModule
 import com.heavyforheavy.profiler.infrastructure.setup.supportModule
-import io.ktor.application.*
-import io.ktor.http.content.*
-import io.ktor.locations.*
-import io.ktor.routing.*
-import org.koin.ktor.ext.Koin
+import io.ktor.server.application.*
+import io.ktor.server.http.content.*
+import io.ktor.server.locations.*
+import io.ktor.server.routing.*
+import org.koin.ktor.plugin.Koin
 import org.koin.logger.slf4jLogger
 
 
 fun Application.configurator(testing: Boolean = false) {
 
   install(Koin) {
-    //TODO set log level to deafult when koin will work fine with java version
+    //TODO set log level to default when koin will work fine with java version
     slf4jLogger(level = org.koin.core.logger.Level.ERROR)
     modules(dataModule, infrastructureModule, useCasesModule)
   }
@@ -37,7 +37,7 @@ private fun Application.addAllRoutes(@Suppress("UNUSED_PARAMETER") testing: Bool
   routing {
     homeRouting()
 
-    authRouting()
+    this@addAllRoutes.authRouting()
     usersRouting()
     viewedUsersRouting()
     saveUserRoting()

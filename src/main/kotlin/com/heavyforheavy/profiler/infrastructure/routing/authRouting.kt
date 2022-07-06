@@ -13,10 +13,10 @@ import com.heavyforheavy.profiler.infrastructure.routing.utils.requireParameter
 import com.heavyforheavy.profiler.infrastructure.routing.utils.requireQueryParameter
 import com.heavyforheavy.profiler.infrastructure.routing.utils.requireTokenData
 import com.heavyforheavy.profiler.infrastructure.routing.utils.route
-import io.ktor.application.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.get
 import kotlin.random.Random
 
@@ -45,8 +45,6 @@ fun Application.authRouting() {
     route(ProfilerRoute.AUTH_SIGN_OUT) {
       val tokenData = call.requireTokenData()
       val result = signOutUseCase.invoke(SignOutAction(tokenData))
-      call.respond(result.token.response())
-
       sendEmailUseCase.invoke(
         SendEmailAction(
           subject = "Profiler Logout",
@@ -54,6 +52,7 @@ fun Application.authRouting() {
           targetUser = getUserUseCase.invoke(GetUserAction(tokenData.id)).user
         )
       )
+      call.respond(result.token.response())
     }
 
     val passwordCode = Random.nextInt(100000, 999999)

@@ -6,7 +6,7 @@ import kotlin.test.Test
 class ApplicationTest {
   @Test
   fun testRoot() {
-    withTestApplication({ }) {
+    testApplication {
 //            handleRequest(HttpMethod.Get, "/").apply {
 //                assertEquals(HttpStatusCode.OK, response.status())
 //                assertEquals("Hello World!", response.content)

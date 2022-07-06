@@ -1,10 +1,10 @@
 package com.heavyforheavy.profiler.infrastructure.routing.utils
 
 import com.heavyforheavy.profiler.infrastructure.routing.models.ProfilerRoute
-import io.ktor.application.*
-import io.ktor.auth.*
 import io.ktor.http.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.routing.*
 import io.ktor.util.pipeline.*
 
 

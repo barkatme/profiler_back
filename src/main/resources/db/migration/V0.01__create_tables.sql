@@ -49,6 +49,14 @@ create TABLE USERS (
     FOREIGN KEY (user_role_id) REFERENCES USER_ROLES (id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+create TABLE RESTORE_PASSWORD_CODES (
+    id serial primary key,
+    user_id int not null unique,
+    code int not null,
+    created_at timestamp not null default CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 create TABLE SERVICE_INFO (
     id serial primary key,
     name varchar(100) not null,

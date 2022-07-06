@@ -5,8 +5,8 @@ import com.heavyforheavy.profiler.infrastructure.model.asTokenData
 import com.heavyforheavy.profiler.infrastructure.model.exception.AuthException
 import com.heavyforheavy.profiler.infrastructure.model.exception.RequestException
 import com.heavyforheavy.profiler.infrastructure.routing.models.Param
-import io.ktor.application.*
-import io.ktor.auth.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 
 private fun ApplicationCall.getUserIdPrincipal(): UserIdPrincipal? {
   return principal()

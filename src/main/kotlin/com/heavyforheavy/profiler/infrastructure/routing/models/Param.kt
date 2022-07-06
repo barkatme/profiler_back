@@ -1,5 +1,6 @@
 package com.heavyforheavy.profiler.infrastructure.routing.models
 
+//TODO: better not to do it this way
 enum class Param(val key: String) {
   USER_ID("userId"),
   VIEWER_ID("viewerId"),
